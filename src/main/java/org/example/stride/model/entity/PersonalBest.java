@@ -15,7 +15,7 @@ public class PersonalBest extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "runner_profile_id", nullable = false)
-    private RunnerProfile runnerProfileId;
+    private RunnerProfile runnerProfile;
 
     @Column(nullable = false)
     private double distance;

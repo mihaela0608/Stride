@@ -16,7 +16,7 @@ public class Run extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name = "runner_profile_id", nullable = false)
-    private RunnerProfile runnerProfileId;
+    private RunnerProfile runnerProfile;
 
     @Column(nullable = false)
     private LocalDate date;

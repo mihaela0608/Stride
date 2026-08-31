@@ -3,7 +3,7 @@ package org.example.stride.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.stride.model.enums.GoalStatus;
+import org.example.stride.model.enums.Status;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ public class Goal extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "runner_profile_id", nullable = false)
-    private RunnerProfile runnerProfileId;
+    private RunnerProfile runnerProfile;
 
     @Column(name = "target_distance", nullable = false)
     private double targetDistance;
@@ -28,7 +28,7 @@ public class Goal extends BaseEntity{
     private LocalDate targetDate;
 
     @Column(nullable = false)
-    private GoalStatus status;
+    private Status status;
 
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;

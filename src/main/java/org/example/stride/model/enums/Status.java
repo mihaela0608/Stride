@@ -1,6 +1,6 @@
 package org.example.stride.model.enums;
 
-public enum GoalStatus {
+public enum Status {
     ACTIVE,
     COMPLETED,
     FAIL,

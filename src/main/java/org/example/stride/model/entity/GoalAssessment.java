@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.stride.model.enums.Difficulty;
-import org.example.stride.model.enums.GoalStatus;
+import org.example.stride.model.enums.Status;
 
 import java.time.LocalDate;
 
@@ -14,17 +14,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class GoalAssessment extends BaseEntity{
-    //id
-    //goalId
-    //predictedTime
-    //requiredImprovementPercentage
-    //difficulty
-    //status
-    //explanation
-    //createdAt
+
     @OneToOne
-    @JoinColumn(name = "goal_id_id", nullable = false)
-    private Goal goalId;
+    @JoinColumn(name = "goal_id", nullable = false)
+    private Goal goal;
 
     @Column(name = "predicted_time", nullable = false)
     private int predictedTime;
@@ -36,7 +29,7 @@ public class GoalAssessment extends BaseEntity{
     private Difficulty difficulty;
 
     @Column(nullable = false)
-    private GoalStatus status;
+    private Status status;
 
     private String explanation;
 
