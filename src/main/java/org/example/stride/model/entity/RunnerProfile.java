@@ -15,16 +15,16 @@ import java.util.List;
 public class RunnerProfile extends BaseEntity{
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "experience_level")
+    @Column(name = "experience_level", nullable = false)
     private ExperienceLevel experienceLevel;
 
-    @Column(name = "runs_per_week")
+    @Column(name = "runs_per_week", nullable = false)
     private int runsPerWeek;
 
-    @Column(name = "average_weekly_distance")
+    @Column(name = "average_weekly_distance", nullable = false)
     private double averageWeeklyDistance;
 
     @Column(name = "longest_recent_run")
