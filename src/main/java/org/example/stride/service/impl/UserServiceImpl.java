@@ -2,6 +2,7 @@ package org.example.stride.service.impl;
 
 import org.example.stride.model.dto.UserRegisterDto;
 import org.example.stride.model.entity.User;
+import org.example.stride.model.enums.Role;
 import org.example.stride.repository.UserRepository;
 import org.example.stride.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -33,8 +34,11 @@ public class UserServiceImpl implements UserService {
 
     private User createUser(UserRegisterDto dto) {
         User user = modelMapper.map(dto, User.class);
+
         user.setCreatedAt(LocalDate.now());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole(Role.USER);
+
         return user;
     }
 }

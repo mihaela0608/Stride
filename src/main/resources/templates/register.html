@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>STRIDE — Регистрация</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+            rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+            STRIDE<span>.</span>
+        </div>
+
+        <div class="auth-header">
+            <div class="crumb">начало / регистрация</div>
+            <h1>Създай акаунт</h1>
+            <p>Започни да следиш своя прогрес.</p>
+        </div>
+
+        <div class="card">
+
+            <div class="card-head">
+                <h2>Лични данни</h2>
+            </div>
+
+            <div class="card-pad">
+
+                <form th:action="@{/register}"
+                      th:object="${userRegisterDto}"
+                      method="post">
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label for="firstName">Име</label>
+                            <input
+                                    type="text"
+                                    id="firstName"
+                                    th:field="*{firstName}"
+                                    placeholder="Михаела"
+                                    required>
+                        </div>
+
+                        <div class="field">
+                            <label for="lastName">Фамилия</label>
+                            <input
+                                    type="text"
+                                    id="lastName"
+                                    th:field="*{lastName}"
+                                    placeholder="Батаклиева"
+                                    required>
+                        </div>
+
+                        <div class="field full">
+                            <label for="email">Email</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    th:field="*{email}"
+                                    placeholder="you@example.com"
+                                    required>
+                        </div>
+
+                        <div class="field full">
+                            <label for="password">Парола</label>
+                            <input
+                                    type="password"
+                                    id="password"
+                                    th:field="*{password}"
+                                    placeholder="••••••••"
+                                    required>
+                        </div>
+
+                        <div class="field">
+                            <label for="dateOfBirth">Дата на раждане</label>
+
+                            <input
+                                    type="text"
+                                    id="dateOfBirth"
+                                    th:field="*{dateOfBirth}"
+                                    placeholder="ДД.ММ.ГГГГ"
+                                    maxlength="10"
+                                    required>
+                        </div>
+
+                        <div class="field">
+                            <label for="gender">Пол</label>
+
+                            <select id="gender"
+                                    th:field="*{gender}"
+                                    required>
+
+                                <option value="">Избери</option>
+
+                                <option value="FEMALE">Жена</option>
+                                <option value="MALE">Мъж</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <button type="submit" class="btn-primary auth-submit">
+                        Създай акаунт
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="auth-footer">
+            Вече имаш акаунт?
+            <a th:href="@{/login}">Влез</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

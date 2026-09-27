@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Профил</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">STRIDE<span>.</span></div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="index.html"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a href="goals.html"><span class="icon">◎</span> Цели</a></li>
+        <li><a href="training-plan.html"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
+        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a href="profile.html" class="active"><span class="icon">●</span> Профил</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar">М</div>
+        <div><div class="name">Михаела</div><div class="role">intermediate runner</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb">профил</div>
+        <h1>Профил на бегача</h1>
+      </div>
+      <div class="actions">
+        <button class="btn-primary">Запази промените</button>
+      </div>
+    </div>
+
+    <div class="content" style="max-width:820px">
+
+      <div class="card">
+        <div class="card-head"><h2>Основни данни</h2></div>
+        <div class="card-pad">
+          <div class="form-grid">
+            <div class="field">
+              <label>Ниво на опит</label>
+              <select>
+                <option>Начинаещ</option>
+                <option selected>Intermediate</option>
+                <option>Напреднал</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Тренировки седмично</label>
+              <input type="number" value="4">
+            </div>
+            <div class="field">
+              <label>Среден седмичен пробег</label>
+              <div class="input-suffix"><input type="text" value="26"><span>км</span></div>
+            </div>
+            <div class="field">
+              <label>Най-дълго скорошно бягане</label>
+              <div class="input-suffix"><input type="text" value="11.4"><span>км</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="card-head"><h2>Предпочитани дни за бягане</h2></div>
+        <div class="card-pad" style="display:flex; gap:10px; flex-wrap:wrap;">
+          <span class="badge realistic">Понеделник</span>
+          <span class="badge neutral">Вторник</span>
+          <span class="badge realistic">Сряда</span>
+          <span class="badge realistic">Четвъртък</span>
+          <span class="badge realistic">Петък</span>
+          <span class="badge neutral">Събота</span>
+          <span class="badge realistic">Неделя</span>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="card-head"><h2>Лични рекорди</h2><span class="meta">управлявани от История на бяганията</span></div>
+        <table>
+          <tr><td class="muted">1 км</td><td class="num" style="text-align:right">4:02</td></tr>
+          <tr><td class="muted">5 км</td><td class="num" style="text-align:right">24:10</td></tr>
+          <tr><td class="muted">10 км</td><td class="num" style="text-align:right">51:47</td></tr>
+          <tr><td class="muted">Half marathon</td><td class="num" style="text-align:right">1:58:32</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

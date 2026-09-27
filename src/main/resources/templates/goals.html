@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Цели</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">STRIDE<span>.</span></div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="index.html"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a href="goals.html" class="active"><span class="icon">◎</span> Цели</a></li>
+        <li><a href="training-plan.html"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
+        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a href="profile.html"><span class="icon">●</span> Профил</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar">М</div>
+        <div><div class="name">Михаела</div><div class="role">intermediate runner</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb">цели</div>
+        <h1>Цели</h1>
+      </div>
+      <div class="actions">
+        <a href="goal-new.html" class="btn-primary">+ Нова цел</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="tabs">
+        <a href="#" class="tab active">Всички <span class="faint">4</span></a>
+        <a href="#" class="tab">Активни <span class="faint">1</span></a>
+        <a href="#" class="tab">Завършени <span class="faint">2</span></a>
+        <a href="#" class="tab">Пропуснати <span class="faint">1</span></a>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Цел</th>
+              <th class="mono">Целево време</th>
+              <th class="mono">Крайна дата</th>
+              <th>Оценка</th>
+              <th>Статус</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="clickable" onclick="location.href='goal-detail.html'">
+              <td>10 км</td>
+              <td class="num">55:00</td>
+              <td class="num">23 ноември 2026</td>
+              <td><span class="badge challenging">challenging</span></td>
+              <td><span class="badge realistic">active</span></td>
+              <td class="faint">→</td>
+            </tr>
+            <tr class="clickable">
+              <td>5 км</td>
+              <td class="num">26:00</td>
+              <td class="num">14 юни 2026</td>
+              <td><span class="badge realistic">realistic</span></td>
+              <td><span class="badge neutral">completed</span></td>
+              <td class="faint">→</td>
+            </tr>
+            <tr class="clickable">
+              <td>Half marathon</td>
+              <td class="num">2:05:00</td>
+              <td class="num">2 март 2026</td>
+              <td><span class="badge ambitious">very ambitious</span></td>
+              <td><span class="badge unrealistic">failed</span></td>
+              <td class="faint">→</td>
+            </tr>
+            <tr class="clickable">
+              <td>10 км</td>
+              <td class="num">58:00</td>
+              <td class="num">9 декември 2025</td>
+              <td><span class="badge realistic">realistic</span></td>
+              <td><span class="badge neutral">completed</span></td>
+              <td class="faint">→</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

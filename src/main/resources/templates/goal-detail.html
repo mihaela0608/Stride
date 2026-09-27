@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — 10 км под 55:00</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">STRIDE<span>.</span></div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="index.html"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a href="goals.html" class="active"><span class="icon">◎</span> Цели</a></li>
+        <li><a href="training-plan.html"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
+        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a href="profile.html"><span class="icon">●</span> Профил</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar">М</div>
+        <div><div class="name">Михаела</div><div class="role">intermediate runner</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb"><a href="goals.html" class="faint">цели</a> / 10 км</div>
+        <h1>10 км под 55:00</h1>
+      </div>
+      <div class="actions">
+        <span class="badge realistic">active</span>
+        <button class="btn-danger-ghost">Отказ от целта</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="grid-2">
+        <div class="stat">
+          <div class="k">прогнозирано финиширане</div>
+          <div class="v">1:01:20</div>
+          <div class="delta flat">нужно подобрение: 10.3%</div>
+        </div>
+        <div class="stat">
+          <div class="k">оценка на трудността</div>
+          <div class="v" style="font-size:20px; padding-top:6px;"><span class="badge challenging" style="font-size:14px; padding:8px 14px;">challenging</span></div>
+          <div class="delta up">▲ достижимо</div>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="card-head"><h2>Защо тази оценка</h2></div>
+        <div class="card-pad">
+          <p class="muted" style="font-size:14.5px; line-height:1.7;">
+            Текущият ти темп от последните тренировки предполага финален резултат около <strong style="color:var(--text)">1:01:20</strong> на 10 км —
+            около 6 минути над целта. Това изисква <strong style="color:var(--text)">10.3%</strong> подобрение за 12 седмици, което е в горната
+            граница на реалистичното без прекомерен риск от травма. Целта остава постижима, ако седмичният ти пробег расте постепенно
+            и темпо тренировките се спазват последователно.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-32">
+        <div class="card">
+          <div class="card-head"><h2>Входни данни за оценката</h2></div>
+          <table>
+            <tr><td class="muted">Личен рекорд 5 км</td><td class="num" style="text-align:right">24:10</td></tr>
+            <tr><td class="muted">Личен рекорд 10 км</td><td class="num" style="text-align:right">—</td></tr>
+            <tr><td class="muted">Най-дълго скорошно бягане</td><td class="num" style="text-align:right">11.4 км</td></tr>
+            <tr><td class="muted">Среден седмичен пробег</td><td class="num" style="text-align:right">26 км</td></tr>
+            <tr><td class="muted">Тренировки седмично</td><td class="num" style="text-align:right">4</td></tr>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Времева рамка</h2></div>
+          <div class="card-pad">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;">
+              <span class="muted">Седмица 6 от 12</span>
+              <span class="mono">50%</span>
+            </div>
+            <div class="pbar"><div style="width:50%"></div></div>
+            <p class="faint mt-32" style="font-size:12.5px;">Начало: 12 септември 2026 · Краен срок: 23 ноември 2026</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="card-head">
+          <h2>Тренировъчен план</h2>
+          <a href="training-plan.html" class="btn-ghost">Отвори плана →</a>
+        </div>
+        <div class="card-pad muted" style="font-size:14px;">
+          12 седмици · 5 тренировки седмично · генериран автоматично при оценяването на целта.
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

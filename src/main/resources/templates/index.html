@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">STRIDE<span>.</span></div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="index.html" class="active"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a href="goals.html"><span class="icon">◎</span> Цели</a></li>
+        <li><a href="training-plan.html"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
+        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a href="profile.html"><span class="icon">●</span> Профил</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar">М</div>
+        <div>
+          <div class="name">Михаела</div>
+          <div class="role">intermediate runner</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb">начало</div>
+        <h1>Добре дошла обратно</h1>
+      </div>
+      <div class="actions">
+        <a href="log-run.html" class="btn-secondary">Впиши бягане</a>
+        <a href="goal-new.html" class="btn-primary">+ Нова цел</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="grid-4">
+        <div class="stat">
+          <div class="k">седмичен пробег</div>
+          <div class="v">28 км</div>
+          <div class="delta up">▲ на график</div>
+        </div>
+        <div class="stat">
+          <div class="k">тренировки тази седмица</div>
+          <div class="v">3 / 5</div>
+          <div class="delta flat">2 остават</div>
+        </div>
+        <div class="stat">
+          <div class="k">активна цел</div>
+          <div class="v">10 км</div>
+          <div class="delta flat">под 55:00</div>
+        </div>
+        <div class="stat">
+          <div class="k">седмица от плана</div>
+          <div class="v">6 / 12</div>
+          <div class="delta up">▲ на график</div>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-32">
+        <div class="card">
+          <div class="card-head">
+            <h2>Оценка на активната цел</h2>
+            <span class="badge challenging">challenging</span>
+          </div>
+          <div class="card-pad">
+            <table style="border:none">
+              <tr><td style="padding:6px 0;border:none" class="muted">Дистанция</td><td style="padding:6px 0;border:none;text-align:right" class="mono">10 км</td></tr>
+              <tr><td style="padding:6px 0;border:none" class="muted">Целево време</td><td style="padding:6px 0;border:none;text-align:right" class="mono">55:00</td></tr>
+              <tr><td style="padding:6px 0;border:none" class="muted">Прогнозирано</td><td style="padding:6px 0;border:none;text-align:right" class="mono">1:01:20</td></tr>
+              <tr><td style="padding:6px 0;border:none" class="muted">Нужно подобрение</td><td style="padding:6px 0;border:none;text-align:right" class="mono">10.3%</td></tr>
+            </table>
+            <div class="divider" style="margin:18px 0"></div>
+            <a href="goal-detail.html" class="btn-ghost" style="padding-left:0">Пълна оценка →</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Седмица 6 — какво следва</h2>
+            <span class="meta">4 от 5 планирани</span>
+          </div>
+          <div class="card-pad" style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line)">
+              <div><div style="font-weight:600; font-size:14px">Четвъртък — Лесно бягане</div><div class="faint" style="font-size:12.5px">5 км, спокойно темпо</div></div>
+              <span class="badge neutral">предстои</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line)">
+              <div><div style="font-weight:600; font-size:14px">Петък — Интервали</div><div class="faint" style="font-size:12.5px">6 × 800м</div></div>
+              <span class="badge neutral">предстои</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+              <div><div style="font-weight:600; font-size:14px">Неделя — Дълго бягане</div><div class="faint" style="font-size:12.5px">12 км, свободно темпо</div></div>
+              <span class="badge neutral">предстои</span>
+            </div>
+            <a href="training-plan.html" class="btn-ghost" style="padding-left:0">Целият план →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="card-head">
+          <h2>Последни бягания</h2>
+          <a href="runs.html" class="btn-ghost">Всички →</a>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Дата</th><th>Тип</th><th class="mono">Дистанция</th><th class="mono">Време</th><th class="mono">Темпо</th><th>Спрямо плана</th></tr>
+          </thead>
+          <tbody>
+            <tr class="clickable" onclick="location.href='runs.html'">
+              <td>29 авг</td><td>Темпо бягане</td><td class="num">6.0 км</td><td class="num">28:40</td><td class="num">4:47/км</td><td><span class="badge realistic">по план</span></td>
+            </tr>
+            <tr class="clickable" onclick="location.href='runs.html'">
+              <td>27 авг</td><td>Лесно бягане</td><td class="num">5.1 км</td><td class="num">29:15</td><td class="num">5:44/км</td><td><span class="badge realistic">по план</span></td>
+            </tr>
+            <tr class="clickable" onclick="location.href='runs.html'">
+              <td>25 авг</td><td>Дълго бягане</td><td class="num">11.4 км</td><td class="num">1:08:02</td><td class="num">5:58/км</td><td><span class="badge challenging">под целта</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

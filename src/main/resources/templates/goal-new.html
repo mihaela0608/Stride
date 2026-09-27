@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Нова цел</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">STRIDE<span>.</span></div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="index.html"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a href="goals.html" class="active"><span class="icon">◎</span> Цели</a></li>
+        <li><a href="training-plan.html"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
+        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a href="profile.html"><span class="icon">●</span> Профил</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar">М</div>
+        <div><div class="name">Михаела</div><div class="role">intermediate runner</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb"><a href="goals.html" class="faint">цели</a> / нова</div>
+        <h1>Нова цел</h1>
+      </div>
+    </div>
+
+    <div class="content" style="max-width:760px">
+      <form>
+        <div class="card card-pad">
+          <div class="form-grid">
+            <div class="field">
+              <label for="distance">Дистанция</label>
+              <select id="distance">
+                <option>5 км</option>
+                <option selected>10 км</option>
+                <option>Half marathon (21.1 км)</option>
+                <option>Marathon (42.2 км)</option>
+                <option>Друга дистанция</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="time">Целево време</label>
+              <div class="input-suffix">
+                <input id="time" type="text" placeholder="00:55:00">
+                <span>чч:мм:сс</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="date">Крайна дата</label>
+              <input id="date" type="date" value="2026-11-23">
+            </div>
+            <div class="field">
+              <label for="race">Събитие <span class="faint">(незадължително)</span></label>
+              <input id="race" type="text" placeholder="напр. Sofia Half Marathon">
+            </div>
+            <div class="field full">
+              <label for="notes">Бележки <span class="faint">(незадължително)</span></label>
+              <textarea id="notes" rows="3" placeholder="Нещо, което STRIDE трябва да знае за тази цел..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-32">
+          <div class="card-head"><h2>Какво ще стане след запис</h2></div>
+          <div class="card-pad" style="display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; gap:14px; align-items:flex-start;">
+              <span class="mono faint" style="padding-top:2px">01</span>
+              <div><div style="font-weight:600; font-size:14px">Оценка на целта</div><div class="muted" style="font-size:13.5px">STRIDE сравнява целта с текущия ти профил и връща прогноза, трудност и статус.</div></div>
+            </div>
+            <div style="display:flex; gap:14px; align-items:flex-start;">
+              <span class="mono faint" style="padding-top:2px">02</span>
+              <div><div style="font-weight:600; font-size:14px">Генериране на план</div><div class="muted" style="font-size:13.5px">Ако целта е постижима, автоматично се създава тренировъчен план по седмици.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:14px; margin-top:32px;">
+          <button type="submit" class="btn-primary">Оцени целта</button>
+          <a href="goals.html" class="btn-secondary">Отказ</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

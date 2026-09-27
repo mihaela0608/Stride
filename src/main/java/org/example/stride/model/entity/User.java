@@ -1,11 +1,10 @@
 package org.example.stride.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.stride.model.enums.Gender;
+import org.example.stride.model.enums.Role;
 
 import java.time.LocalDate;
 
@@ -35,4 +34,11 @@ public class User extends BaseEntity{
 
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
+
+    @OneToOne(mappedBy = "user")
+    private RunnerProfile runnerProfile;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRIDE — Интервали, седмица 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">STRIDE<span>.</span></div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="index.html"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a href="goals.html"><span class="icon">◎</span> Цели</a></li>
+        <li><a href="training-plan.html" class="active"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
+        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a href="profile.html"><span class="icon">●</span> Профил</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar">М</div>
+        <div><div class="name">Михаела</div><div class="role">intermediate runner</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb"><a href="training-plan.html" class="faint">план</a> / седмица 6 / петък</div>
+        <h1>Интервали</h1>
+      </div>
+      <div class="actions">
+        <button class="btn-primary">Отбележи като изпълнена</button>
+      </div>
+    </div>
+
+    <div class="content" style="max-width:820px">
+
+      <div class="card">
+        <div class="card-head"><h2>Планирано</h2><span class="meta">петък, седмица 6</span></div>
+        <div class="card-pad">
+          <p class="muted" style="font-size:14.5px; line-height:1.7;">
+            6 × 800м на целево темпо за 10 км (≈4:20/км), с 400м бавен джогинг за възстановяване между повторенията.
+            10 минути загрявка и 10 минути раздвижване след това.
+          </p>
+          <div class="grid-3 mt-32">
+            <div class="stat"><div class="k">целево темпо</div><div class="v" style="font-size:20px">4:20/км</div></div>
+            <div class="stat"><div class="k">общо разстояние</div><div class="v" style="font-size:20px">~9.6 км</div></div>
+            <div class="stat"><div class="k">тип</div><div class="v" style="font-size:20px">Intervals</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="card-head"><h2>Впиши изпълнението</h2></div>
+        <div class="card-pad">
+          <form class="form-grid">
+            <div class="field">
+              <label>Дистанция</label>
+              <div class="input-suffix"><input type="text" placeholder="9.6"><span>км</span></div>
+            </div>
+            <div class="field">
+              <label>Времетраене</label>
+              <input type="text" placeholder="46:10">
+            </div>
+            <div class="field">
+              <label>Среден пулс</label>
+              <div class="input-suffix"><input type="text" placeholder="162"><span>уд/мин</span></div>
+            </div>
+            <div class="field">
+              <label>Усещане за усилие (RPE)</label>
+              <select>
+                <option>1 — много леко</option>
+                <option>2</option><option>3</option><option>4</option>
+                <option selected>5 — умерено</option>
+                <option>6</option><option>7</option><option>8</option>
+                <option>9</option><option>10 — максимално</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label>Бележки <span class="faint">(незадължително)</span></label>
+              <textarea rows="3" placeholder="Как мина тренировката..."></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:14px; margin-top:32px;">
+        <button class="btn-primary">Запази бягането</button>
+        <a href="training-plan.html" class="btn-secondary">Обратно към плана</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
