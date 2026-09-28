@@ -30,6 +30,7 @@ public class User extends BaseEntity{
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(name = "created_at", nullable = false)
