@@ -55,8 +55,9 @@
                                     type="text"
                                     id="firstName"
                                     th:field="*{firstName}"
-                                    placeholder="Михаела"
+                                    placeholder="Име"
                                     required>
+                            <div th:if="${#fields.hasErrors('firstName')}" th:errors = "*{firstName}" class="error"></div>
                         </div>
 
                         <div class="field">
@@ -65,8 +66,9 @@
                                     type="text"
                                     id="lastName"
                                     th:field="*{lastName}"
-                                    placeholder="Батаклиева"
+                                    placeholder="Фамилия"
                                     required>
+                            <div th:if="${#fields.hasErrors('lastName')}" th:errors = "*{lastName}" class="error"></div>
                         </div>
 
                         <div class="field full">
@@ -77,6 +79,8 @@
                                     th:field="*{email}"
                                     placeholder="you@example.com"
                                     required>
+                            <div th:if="${#fields.hasErrors('email')}" th:errors = "*{email}" class="error"></div>
+                            <div th:if="${occupied}" class="error">Email is already occupied</div>
                         </div>
 
                         <div class="field full">
@@ -87,6 +91,7 @@
                                     th:field="*{password}"
                                     placeholder="••••••••"
                                     required>
+                            <div th:if="${#fields.hasErrors('password')}" th:errors = "*{password}" class="error"></div>
                         </div>
 
                         <div class="field">
@@ -99,6 +104,7 @@
                                     placeholder="ДД.ММ.ГГГГ"
                                     maxlength="10"
                                     required>
+                            <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors = "*{dateOfBirth}" class="error"></div>
                         </div>
 
                         <div class="field">
@@ -114,6 +120,7 @@
                                 <option value="MALE">Мъж</option>
 
                             </select>
+                            <div th:if="${#fields.hasErrors('gender')}" th:errors = "*{gender}" class="error"></div>
                         </div>
 
                     </div>

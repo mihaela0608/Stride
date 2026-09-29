@@ -1,14 +1,17 @@
 package org.example.stride.web;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.stride.model.dto.UserRegisterDto;
 import org.example.stride.model.enums.Gender;
 import org.example.stride.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @AllArgsConstructor
@@ -19,22 +22,33 @@ public class UserController {
     @GetMapping("/register")
     public String showRegisterPage(Model model){
 
-        model.addAttribute("userRegisterDto", new UserRegisterDto());
-        model.addAttribute("genders", Gender.values());
+        if (!model.containsAttribute("userRegisterDto")){
+            model.addAttribute("userRegisterDto", new UserRegisterDto());
+            model.addAttribute("genders", Gender.values());
+        }
 
         return "register";
     }
 
-    @PostMapping("/register")
-    public String registerUser(
-            @ModelAttribute("userRegisterDto") UserRegisterDto dto) {
 
+
+
+    @PostMapping("/register")
+    public String registerUser(@Valid @ModelAttribute("userRegisterDto") UserRegisterDto dto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("userRegisterDto", dto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterDto", bindingResult);
+            return "redirect:/register";
+        }
         boolean registered = userService.registerUser(dto);
 
         if (!registered) {
-            return "redirect:/register?emailExists";
+            redirectAttributes.addFlashAttribute("userRegisterDto", dto);
+            redirectAttributes.addFlashAttribute("occupied", true);
+            return "redirect:/register";
         }
 
-        return "redirect:/login?registered";
+        return "redirect:/login";
     }
 }
