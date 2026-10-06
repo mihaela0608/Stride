@@ -51,4 +51,10 @@ public class UserController {
 
         return "redirect:/login";
     }
+
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+        // TODO: Change a little the login html
+    }
 }

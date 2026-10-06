@@ -18,6 +18,7 @@ public class RunnerProfile extends BaseEntity{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "experience_level", nullable = false)
     private ExperienceLevel experienceLevel;
 
