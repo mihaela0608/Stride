@@ -7,6 +7,7 @@ import org.example.stride.model.enums.Day;
 import org.example.stride.model.enums.ExperienceLevel;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "runner_profiles")
@@ -31,7 +32,7 @@ public class RunnerProfile extends BaseEntity{
     @Column(name = "longest_recent_run")
     private double longestRecentRun;
 
-//    @Column(name = "preferred_running_days")
-//    private List<Day> preferredRunningDays;
+    @Column(name = "preferred_running_days")
+    private Set<Day> preferredRunningDays;
     //TODO Running days not covered
 }
