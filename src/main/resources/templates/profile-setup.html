@@ -165,16 +165,8 @@
         <div class="card-pad">
 
 
-          <!-- GLOBAL ERROR -->
 
-          <div
-                  th:if="${#fields.hasGlobalErrors()}"
-                  class="form-error">
 
-            <div
-                    th:each="error : ${#fields.globalErrors()}"
-                    th:text="${error.defaultMessage}">
-            </div>
 
           </div>
 
@@ -184,6 +176,17 @@
                   th:object="${runnerProfileDto}"
                   method="post">
 
+
+            <div
+                    th:if="${#fields.hasGlobalErrors()}"
+                    class="form-error">
+
+              <div
+                      th:each="error : ${#fields.globalErrors()}"
+                      th:text="${error}">
+              </div>
+
+            </div>
 
             <div class="form-grid">
 

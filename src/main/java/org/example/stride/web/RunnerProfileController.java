@@ -32,7 +32,7 @@ public class RunnerProfileController {
     @PostMapping("/profile/setup")
     public String createProfile(@Valid @ModelAttribute("runnerProfileDto") RunnerProfileDto runnerProfileDto, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "/profile/setup";
+            return "profile-setup";
         }
 
         boolean created = runnerProfileService.createRunnerProfile(runnerProfileDto);
