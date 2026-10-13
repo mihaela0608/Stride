@@ -29,6 +29,12 @@ public class RunnerProfileDto {
     @Positive(message = "Дистанцията не може да е отрицателна.")
     private double longestRecentRun;
 
+    @NotBlank(message = "Въведи средното си темпо.")
+    @Pattern(regexp = "^(?:[0-5]?[0-9]):[0-5][0-9]$", message = "Форматът трябва да е ММ:СС (напр. 05:30).")
+    private String averagePace; // Формат: "05:30"
+
     @NotNull
     private Set<Day> preferredRunningDays;
+
+
 }

@@ -73,4 +73,3 @@ public class RunnerProfileController {
     }
 }
 
-// TODO: There is an error with creating runner profile

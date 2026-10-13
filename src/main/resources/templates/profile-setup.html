@@ -148,6 +148,22 @@
             <div th:if="${#fields.hasErrors('longestRecentRun')}"
                  th:errors="*{longestRecentRun}" class="field-error"></div>
           </div>
+
+          <div class="field">
+            <label for="averagePace">Средно темпо</label>
+            <div class="input-suffix">
+              <input type="text"
+                     id="averagePace"
+                     th:field="*{averagePace}"
+                     placeholder="05:30"
+                     maxlength="5"
+                     required>
+              <span>мин/км</span>
+            </div>
+            <div th:if="${#fields.hasErrors('averagePace')}"
+                 th:errors="*{averagePace}" class="field-error"></div>
+          </div>
+
         </div>
       </section>
 
@@ -219,6 +235,22 @@
   });
 
   validateRunningDays(false);
+
+  const paceInput = document.getElementById('averagePace');
+
+  if (paceInput) {
+    paceInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, ''); // Премахва всичко освен цифри
+      if (value.length > 4) value = value.slice(0, 4);
+
+      if (value.length >= 3) {
+        // Поставя двоеточие след 2-рата цифра
+        e.target.value = value.slice(0, value.length - 2) + ':' + value.slice(value.length - 2);
+      } else {
+        e.target.value = value;
+      }
+    });
+  }
 </script>
 </body>
 </html>

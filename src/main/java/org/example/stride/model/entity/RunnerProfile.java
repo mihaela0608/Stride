@@ -33,6 +33,9 @@ public class RunnerProfile extends BaseEntity{
     @Column(name = "longest_recent_run")
     private double longestRecentRun;
 
+    @Column(name = "average_pace_seconds")
+    private double averagePaceSeconds;
+
     @ElementCollection
     @CollectionTable(
             name = "runner_profile_running_days",
@@ -41,5 +44,4 @@ public class RunnerProfile extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "running_day", nullable = false, length = 20)
     private Set<Day> preferredRunningDays = new HashSet<>();
-    //TODO Running days not covered
 }

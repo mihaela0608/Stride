@@ -34,6 +34,7 @@ public class RunnerProfileServiceImpl implements RunnerProfileService {
         }
 
         runnerProfile.setUser(user);
+        runnerProfile.setAveragePaceSeconds(parsePaceToSeconds(runnerProfileDto.getAveragePace()));
         modelMapper.map(runnerProfileDto, runnerProfile);
 
         runnerProfileRepository.save(runnerProfile);
@@ -43,5 +44,12 @@ public class RunnerProfileServiceImpl implements RunnerProfileService {
     @Override
     public boolean hasProfile(Long userId) {
         return runnerProfileRepository.existsByUserId(currentUserService.getCurrentUser().getId());
+    }
+
+    private static int parsePaceToSeconds(String pace){
+        String[] parts = pace.split(":");
+        int minutes = Integer.parseInt(parts[0]);
+        int seconds = Integer.parseInt(parts[1]);
+        return (minutes * 60) + seconds;
     }
 }
