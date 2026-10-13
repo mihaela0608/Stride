@@ -440,3 +440,143 @@ legend{ font-size:14px; font-weight:600; margin-bottom:14px; padding:0; }
     }
 
 }
+
+/* =========================================
+   DAYS PICKER
+   ========================================= */
+.days-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.days-head label { font-size: 13px; font-weight: 600; color: var(--text-dim); }
+
+.day-counter {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  transition: background .12s ease, color .12s ease;
+}
+.day-counter.ok { background: var(--brand-dim); color: var(--brand); }
+
+.field-hint { font-size: 13px; color: var(--text-dim); margin-bottom: 14px; }
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day-option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+/* Скриваме инпута, но го оставяме функционален */
+.day-option input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Немаркиран ден (по подразбиране) */
+.day-option .day-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border-radius: 6px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  user-select: none;
+  transition: all 0.15s ease-in-out;
+}
+
+/* Ховър ефект върху немаркиран ден */
+.day-option:hover .day-name {
+  border-color: var(--brand);
+  color: var(--text);
+  background: rgba(198, 255, 60, 0.08);
+}
+
+/* Маркиран ден (CHECKED) — Ярък контраст */
+.day-option input[type="checkbox"]:checked ~ .day-name {
+  background: var(--brand) !important;
+  border-color: var(--brand) !important;
+  color: #0F1210 !important;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(198, 255, 60, 0.3);
+  transform: translateY(-1px);
+}
+
+.day-option input[type="checkbox"]:active ~ .day-name {
+  transform: scale(0.95);
+}
+
+.day-option input[type="checkbox"]:focus-visible ~ .day-name {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .days-grid { gap: 6px; }
+  .day-option .day-name { height: 48px; font-size: 12px; }
+}
+
+/* =========================================
+   STEPPER (бягания седмично)
+   ========================================= */
+.stepper{
+  display:flex; align-items:stretch;
+  border:1px solid var(--line-strong); border-radius:5px;
+  background:var(--bg); overflow:hidden;
+}
+.stepper:focus-within{ border-color:var(--brand); }
+.stepper button{
+  width:46px; border:none; background:var(--surface-2); color:var(--text);
+  font-size:18px; transition:background .12s ease, color .12s ease;
+}
+.stepper button:hover{ background:var(--brand-dim); color:var(--brand); }
+.field .stepper input{
+  flex:1; min-width:0; border:none; border-radius:0;
+  text-align:center; font-family:var(--mono); font-size:16px; font-weight:600;
+  -moz-appearance:textfield;
+}
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.stepper input:focus{ outline:none; }
+
+/* number inputs без стрелки навсякъде във формата */
+.field input[type=number]{ -moz-appearance:textfield; }
+.field input[type=number]::-webkit-outer-spin-button,
+.field input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+
+/* =========================================
+   СЕКЦИИ НА ФОРМАТА
+   ========================================= */
+.form-section{
+  padding-bottom:30px; margin-bottom:30px;
+  border-bottom:1px solid var(--line);
+}
+.form-section:last-of-type{ border-bottom:none; }
+.section-label{ display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.section-num{ font-family:var(--mono); font-size:12px; color:var(--text-faint); }
+.section-label h2{ font-size:17px; font-weight:600; }
+.form-row{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media (max-width:520px){ .form-row{ grid-template-columns:1fr; } }

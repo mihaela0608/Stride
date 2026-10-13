@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface RunnerProfileRepository extends JpaRepository<RunnerProfile, Long> {
     Optional<RunnerProfile> findByUser(User user);
+    boolean existsByUserId(Long userId);
 }

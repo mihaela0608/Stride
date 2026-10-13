@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.example.stride.model.enums.Day;
 import org.example.stride.model.enums.ExperienceLevel;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +33,13 @@ public class RunnerProfile extends BaseEntity{
     @Column(name = "longest_recent_run")
     private double longestRecentRun;
 
-    @Column(name = "preferred_running_days")
-    private Set<Day> preferredRunningDays;
+    @ElementCollection
+    @CollectionTable(
+            name = "runner_profile_running_days",
+            joinColumns = @JoinColumn(name = "runner_profile_id")
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "running_day", nullable = false, length = 20)
+    private Set<Day> preferredRunningDays = new HashSet<>();
     //TODO Running days not covered
 }

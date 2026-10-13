@@ -4,4 +4,5 @@ import org.example.stride.model.dto.RunnerProfileDto;
 
 public interface RunnerProfileService {
      boolean createRunnerProfile(RunnerProfileDto runnerProfileDto);
+     boolean hasProfile(Long userId);
 }

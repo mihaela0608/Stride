@@ -29,10 +29,19 @@ public class RunnerProfileServiceImpl implements RunnerProfileService {
 
         RunnerProfile runnerProfile = new RunnerProfile();
 
+        if (runnerProfileDto.getPreferredRunningDays().size() != runnerProfileDto.getRunsPerWeek()){
+            return false;
+        }
+
         runnerProfile.setUser(user);
         modelMapper.map(runnerProfileDto, runnerProfile);
 
         runnerProfileRepository.save(runnerProfile);
         return true;
+    }
+
+    @Override
+    public boolean hasProfile(Long userId) {
+        return runnerProfileRepository.existsByUserId(currentUserService.getCurrentUser().getId());
     }
 }
