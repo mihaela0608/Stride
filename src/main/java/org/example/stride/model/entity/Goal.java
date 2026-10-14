@@ -21,13 +21,15 @@ public class Goal extends BaseEntity{
     @Column(name = "target_distance", nullable = false)
     private double targetDistance;
 
-    @Column(name = "target_time")
-    private Duration targetTime;
+    @Column(name = "target_time_seconds")
+    private int targetTimeSeconds;
 
     @Column(name = "target_date")
     private LocalDate targetDate;
 
+
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private Status status;
 
     @Column(name = "created_at", nullable = false)

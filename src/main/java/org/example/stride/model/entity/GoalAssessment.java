@@ -23,13 +23,13 @@ public class GoalAssessment extends BaseEntity{
     private int predictedTime;
 
     @Column(name = "required_improvement_percentage", nullable = false)
-    private int requiredImprovementPercentage;
+    private double requiredImprovementPercentage;
 
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @Column(nullable = false)
-    private Status status;
+
 
     private String explanation;
 
