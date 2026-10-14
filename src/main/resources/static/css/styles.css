@@ -580,3 +580,57 @@ legend{ font-size:14px; font-weight:600; margin-bottom:14px; padding:0; }
 .section-label h2{ font-size:17px; font-weight:600; }
 .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 @media (max-width:520px){ .form-row{ grid-template-columns:1fr; } }
+
+/* =========================================
+   TIME PICKER GROUP (За Часове / Минути / Секунди)
+   ========================================= */
+.time-picker-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  padding: 4px 8px;
+}
+
+.time-picker-group:focus-within {
+  border-color: var(--brand);
+}
+
+.time-unit {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.time-unit input {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 8px 18px 8px 4px !important;
+}
+
+.time-unit input:focus {
+  outline: none !important;
+}
+
+.time-unit span {
+  position: absolute;
+  right: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.time-sep {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--text-faint);
+}

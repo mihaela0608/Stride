@@ -43,6 +43,7 @@ public class GoalServiceImpl implements GoalService {
 
         goal.setRunnerProfile(runnerProfile);
         goal.setCreatedAt(LocalDate.now());
+        goal.setTargetTimeSeconds(parseTargetTime(dto));
         goal.setStatus(Status.ACTIVE);
 
         Goal savedGoal = goalRepository.save(goal);
@@ -50,6 +51,10 @@ public class GoalServiceImpl implements GoalService {
         GoalAssessment assessment = createGoalAssessment(savedGoal);
 
         goalAssessmentRepository.save(assessment);
+    }
+
+    private int parseTargetTime(GoalCreationDto dto) {
+        return dto.getTargetHours() * 60 * 60 + dto.getTargetMinutes() * 60 + dto.getTargetSeconds();
     }
 
     private GoalAssessment createGoalAssessment(Goal goal) {
@@ -89,25 +94,35 @@ public class GoalServiceImpl implements GoalService {
         );
 
         assessment.setCreatedAt(LocalDate.now());
-        assessment.setDifficulty(determineDifficulty(percentage));
+        assessment.setDifficulty(determineDifficulty(percentage, goal.getTargetDate()));
 
         //TODO: Goal-а не е определен спрямо таргет датата. Да се изчисли спрямо това и трудноста
 
         return assessment;
     }
 
-    private Difficulty determineDifficulty(double percentage) {
-        if (percentage <= 0) {
+    private Difficulty determineDifficulty(double percentage, LocalDate targetDate) {
+
+        double weeksRemaining = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), targetDate) / 7.0;
+
+        if (weeksRemaining < 0){
+            return Difficulty.UNREALISTIC;
+        }
+
+        double improvementPercentagePerWeek = percentage / weeksRemaining;
+
+        if (percentage <= 0.3){
             return Difficulty.REALISTIC;
         }
 
-        if (percentage <= 3) {
+        if (percentage <= 0.5) {
             return Difficulty.CHALLENGING;
         }
 
-        if (percentage <= 8) {
+        if (percentage <= 1.0) {
             return Difficulty.VERY_AMBITIOUS;
         }
+
 
         return Difficulty.UNREALISTIC;
     }

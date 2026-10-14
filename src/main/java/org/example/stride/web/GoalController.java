@@ -7,6 +7,7 @@ import org.example.stride.service.GoalService;
 import org.example.stride.service.RunnerProfileService;
 import org.example.stride.service.session.CurrentUserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,17 +20,19 @@ public class GoalController {
     private final RunnerProfileService runnerProfileService;
     private final CurrentUserService currentUserService;
 
-    @GetMapping("/create/goal")
-    public String viewGoalSetup(){
+    @GetMapping("/goals/add")
+    public String viewGoalSetup(Model model){
 
         if (!runnerProfileService.hasProfile(currentUserService.getCurrentUser().getId())){
             return "redirect:/profile/setup";
         }
 
+        model.addAttribute("goalCreationDto", new GoalCreationDto());
+
         return "goal-new";
     }
 
-    @PostMapping("/create/goal")
+    @PostMapping("/goals/add")
     public String createGoal(@Valid @ModelAttribute GoalCreationDto goalCreationDto, BindingResult bindingResult){
         if (!runnerProfileService.hasProfile(currentUserService.getCurrentUser().getId())){
             return "redirect:/profile/setup";
@@ -44,3 +47,5 @@ public class GoalController {
         return "redirect:/";
     }
 }
+
+// TODO: Проблеми със статуса при създаване

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STRIDE — Нова цел</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../static/css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRIDE — Нова цел</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 <div class="app-shell">
@@ -16,12 +16,12 @@
     <div class="sidebar-brand">STRIDE<span>.</span></div>
     <nav class="sidebar-nav">
       <ul>
-        <li><a href="index.html"><span class="icon">⌂</span> Dashboard</a></li>
-        <li><a href="goals.html" class="active"><span class="icon">◎</span> Цели</a></li>
-        <li><a href="training-plan.html"><span class="icon">▤</span> Тренировъчен план</a></li>
-        <li><a href="runs.html"><span class="icon">↻</span> Бягания</a></li>
-        <li><a href="progress.html"><span class="icon">▲</span> Прогрес</a></li>
-        <li><a href="profile.html"><span class="icon">●</span> Профил</a></li>
+        <li><a th:href="@{/dashboard}"><span class="icon">⌂</span> Dashboard</a></li>
+        <li><a th:href="@{/goals}" class="active"><span class="icon">◎</span> Цели</a></li>
+        <li><a th:href="@{/training-plan}"><span class="icon">▤</span> Тренировъчен план</a></li>
+        <li><a th:href="@{/runs}"><span class="icon">↻</span> Бягания</a></li>
+        <li><a th:href="@{/progress}"><span class="icon">▲</span> Прогрес</a></li>
+        <li><a th:href="@{/profile}"><span class="icon">●</span> Профил</a></li>
       </ul>
     </nav>
     <div class="sidebar-foot">
@@ -35,44 +35,103 @@
   <main class="main">
     <div class="topbar">
       <div>
-        <div class="crumb"><a href="goals.html" class="faint">цели</a> / нова</div>
+        <div class="crumb"><a th:href="@{/goals}" class="faint">цели</a> / нова</div>
         <h1>Нова цел</h1>
       </div>
     </div>
 
     <div class="content" style="max-width:760px">
-      <form>
+      <form th:action="@{/goals/add}" th:object="${goalCreationDto}" method="post">
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="form-error" style="margin-bottom: 20px;">
+          <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+        </div>
+
         <div class="card card-pad">
           <div class="form-grid">
+
+            <!-- Дистанция -->
             <div class="field">
-              <label for="distance">Дистанция</label>
-              <select id="distance">
-                <option>5 км</option>
-                <option selected>10 км</option>
-                <option>Half marathon (21.1 км)</option>
-                <option>Marathon (42.2 км)</option>
-                <option>Друга дистанция</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="time">Целево време</label>
+              <label for="targetDistance">Целева дистанция</label>
               <div class="input-suffix">
-                <input id="time" type="text" placeholder="00:55:00">
-                <span>чч:мм:сс</span>
+                <input type="number"
+                       id="targetDistance"
+                       th:field="*{targetDistance}"
+                       step="0.1"
+                       min="0.1"
+                       placeholder="10"
+                       required>
+                <span>км</span>
+              </div>
+              <div th:if="${#fields.hasErrors('targetDistance')}"
+                   th:errors="*{targetDistance}" class="field-error"></div>
+            </div>
+
+            <!-- Интуитивен инпут за Целево време (ЧЧ : ММ : СС) -->
+            <div class="field">
+              <label>Целево време</label>
+              <div class="time-picker-group">
+                <div class="time-unit">
+                  <input type="number"
+                         id="targetHours"
+                         th:field="*{targetHours}"
+                         min="0"
+                         max="23"
+                         placeholder="00"
+                         required>
+                  <span>ч</span>
+                </div>
+                <span class="time-sep">:</span>
+                <div class="time-unit">
+                  <input type="number"
+                         id="targetMinutes"
+                         th:field="*{targetMinutes}"
+                         min="0"
+                         max="59"
+                         placeholder="55"
+                         required>
+                  <span>м</span>
+                </div>
+                <span class="time-sep">:</span>
+                <div class="time-unit">
+                  <input type="number"
+                         id="targetSeconds"
+                         th:field="*{targetSeconds}"
+                         min="0"
+                         max="59"
+                         placeholder="00"
+                         required>
+                  <span>с</span>
+                </div>
+              </div>
+              <div th:if="${#fields.hasErrors('targetHours') or #fields.hasErrors('targetMinutes') or #fields.hasErrors('targetSeconds')}"
+                   class="field-error">
+                Въведи валидно време.
               </div>
             </div>
+
+            <!-- Крайна дата -->
             <div class="field">
-              <label for="date">Крайна дата</label>
-              <input id="date" type="date" value="2026-11-23">
+              <label for="targetDate">Крайна дата</label>
+              <input type="date"
+                     id="targetDate"
+                     th:field="*{targetDate}"
+                     required>
+              <div th:if="${#fields.hasErrors('targetDate')}"
+                   th:errors="*{targetDate}" class="field-error"></div>
             </div>
+
+            <!-- Събитие -->
             <div class="field">
-              <label for="race">Събитие <span class="faint">(незадължително)</span></label>
-              <input id="race" type="text" placeholder="напр. Sofia Half Marathon">
+              <label for="event">Събитие <span class="faint">(незадължително)</span></label>
+              <input type="text"
+                     id="event"
+                     th:field="*{event}"
+                     placeholder="напр. Sofia Half Marathon">
+              <div th:if="${#fields.hasErrors('event')}"
+                   th:errors="*{event}" class="field-error"></div>
             </div>
-            <div class="field full">
-              <label for="notes">Бележки <span class="faint">(незадължително)</span></label>
-              <textarea id="notes" rows="3" placeholder="Нещо, което STRIDE трябва да знае за тази цел..."></textarea>
-            </div>
+
           </div>
         </div>
 
@@ -92,11 +151,28 @@
 
         <div style="display:flex; gap:14px; margin-top:32px;">
           <button type="submit" class="btn-primary">Оцени целта</button>
-          <a href="goals.html" class="btn-secondary">Отказ</a>
+          <a th:href="@{/goals}" class="btn-secondary">Отказ</a>
         </div>
       </form>
     </div>
   </main>
 </div>
+
+<!-- Малък скрипт за интуитивна авто-навигация между Часове -> Минути -> Секунди -->
+<script>
+  const h = document.getElementById('targetHours');
+  const m = document.getElementById('targetMinutes');
+  const s = document.getElementById('targetSeconds');
+
+  [h, m, s].forEach(input => {
+    input.addEventListener('input', (e) => {
+      // Автоматично преминаване към следващо поле при 2 въведени цифри
+      if (e.target.value.length >= 2) {
+        if (e.target === h) m.focus();
+        if (e.target === m) s.focus();
+      }
+    });
+  });
+</script>
 </body>
 </html>
