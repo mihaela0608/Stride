@@ -43,6 +43,7 @@
     <div class="content" style="max-width:760px">
       <form th:action="@{/goals/add}" th:object="${goalCreationDto}" method="post">
 
+        <!-- Глобални грешки (напр. от IllegalStateException в сървиса) -->
         <div th:if="${#fields.hasGlobalErrors()}" class="form-error" style="margin-bottom: 20px;">
           <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
         </div>
@@ -67,7 +68,7 @@
                    th:errors="*{targetDistance}" class="field-error"></div>
             </div>
 
-            <!-- Интуитивен инпут за Целево време (ЧЧ : ММ : СС) -->
+            <!-- Целево време (ЧЧ : ММ : СС) -->
             <div class="field">
               <label>Целево време</label>
               <div class="time-picker-group">
@@ -104,19 +105,17 @@
                   <span>с</span>
                 </div>
               </div>
-              <div th:if="${#fields.hasErrors('targetHours') or #fields.hasErrors('targetMinutes') or #fields.hasErrors('targetSeconds')}"
-                   class="field-error">
-                Въведи валидно време.
-              </div>
+              <div th:if="${#fields.hasErrors('targetHours')}" th:errors="*{targetHours}" class="field-error"></div>
+              <div th:if="${#fields.hasErrors('targetMinutes')}" th:errors="*{targetMinutes}" class="field-error"></div>
+              <div th:if="${#fields.hasErrors('targetSeconds')}" th:errors="*{targetSeconds}" class="field-error"></div>
             </div>
 
-            <!-- Крайна дата -->
+            <!-- Крайна дата (Премахнат е required, тъй като е опционална) -->
             <div class="field">
-              <label for="targetDate">Крайна дата</label>
+              <label for="targetDate">Крайна дата <span class="faint">(незадължително)</span></label>
               <input type="date"
                      id="targetDate"
-                     th:field="*{targetDate}"
-                     required>
+                     th:field="*{targetDate}">
               <div th:if="${#fields.hasErrors('targetDate')}"
                    th:errors="*{targetDate}" class="field-error"></div>
             </div>
@@ -158,7 +157,6 @@
   </main>
 </div>
 
-<!-- Малък скрипт за интуитивна авто-навигация между Часове -> Минути -> Секунди -->
 <script>
   const h = document.getElementById('targetHours');
   const m = document.getElementById('targetMinutes');
@@ -166,8 +164,12 @@
 
   [h, m, s].forEach(input => {
     input.addEventListener('input', (e) => {
-      // Автоматично преминаване към следващо поле при 2 въведени цифри
-      if (e.target.value.length >= 2) {
+      // Премахва водещи нули, ако потребителят въвежда отново
+      if (e.target.value.length > 2) {
+        e.target.value = e.target.value.slice(-2);
+      }
+      // Автоматичен фокус напред при 2 въведени цифри
+      if (e.target.value.length === 2) {
         if (e.target === h) m.focus();
         if (e.target === m) s.focus();
       }

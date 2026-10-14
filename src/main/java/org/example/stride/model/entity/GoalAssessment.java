@@ -19,8 +19,8 @@ public class GoalAssessment extends BaseEntity{
     @JoinColumn(name = "goal_id", nullable = false)
     private Goal goal;
 
-    @Column(name = "predicted_time", nullable = false)
-    private int predictedTime;
+//    @Column(name = "predicted_time", nullable = false)
+//    private int predictedTime;
 
     @Column(name = "required_improvement_percentage", nullable = false)
     private double requiredImprovementPercentage;
@@ -31,8 +31,17 @@ public class GoalAssessment extends BaseEntity{
 
 
 
+    @Column(length = 1000)
     private String explanation;
 
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
+
+    @Column(name = "estimated_weeks", nullable = false)
+    private int estimatedWeeks;
+
+    @Column(name = "projected_date", nullable = false)
+    private LocalDate projectedDate;
+
+
 }

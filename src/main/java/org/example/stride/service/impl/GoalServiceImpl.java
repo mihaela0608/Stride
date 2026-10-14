@@ -1,19 +1,19 @@
 package org.example.stride.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.GoalCreationDto;
 import org.example.stride.model.entity.Goal;
 import org.example.stride.model.entity.GoalAssessment;
 import org.example.stride.model.entity.RunnerProfile;
-import org.example.stride.model.enums.Difficulty;
 import org.example.stride.model.enums.Status;
 import org.example.stride.repository.GoalAssessmentRepository;
 import org.example.stride.repository.GoalRepository;
 import org.example.stride.service.GoalService;
+import org.example.stride.service.helpClasses.AssessmentResult;
+import org.example.stride.service.helpClasses.GoalAssessmentCalculator;
 import org.example.stride.service.session.CurrentUserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -24,106 +24,67 @@ public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
     private final GoalAssessmentRepository goalAssessmentRepository;
     private final CurrentUserService currentUserService;
-    private final ModelMapper modelMapper;
+    private final GoalAssessmentCalculator calculator;
 
     @Override
     @Transactional
     public void createGoal(GoalCreationDto dto) {
-        RunnerProfile runnerProfile =
-                currentUserService.getCurrentUser().getRunnerProfile();
+        RunnerProfile runnerProfile = currentUserService.getCurrentUser().getRunnerProfile();
 
         if (runnerProfile == null) {
-            throw new IllegalStateException(
-                    "Преди да създадеш цел, трябва да имаш бегачески профил."
-            );
+            throw new IllegalStateException("Преди да създадеш цел, трябва да имаш бегачески профил.");
         }
 
+        int targetSeconds = parseTargetTime(dto);
+
+        if (targetSeconds <= 0) {
+            throw new IllegalArgumentException("Целевото време трябва да бъде положително.");
+        }
+
+        if (runnerProfile.getLongestRecentRun() <= 0 || runnerProfile.getAveragePaceSeconds() <= 0) {
+            throw new IllegalStateException("Необходими са валидни данни за бягане, за да се направи прогноза.");
+        }
+
+        LocalDate today = LocalDate.now();
+
+        AssessmentResult result = calculator.predict(
+                runnerProfile.getLongestRecentRun(),
+                runnerProfile.getAveragePaceSeconds(),
+                runnerProfile.getAverageWeeklyDistance(),
+                dto.getTargetDistance(),
+                targetSeconds,
+                dto.getTargetDate()
+        );
+
         Goal goal = new Goal();
-        modelMapper.map(dto, goal);
-
         goal.setRunnerProfile(runnerProfile);
-        goal.setCreatedAt(LocalDate.now());
-        goal.setTargetTimeSeconds(parseTargetTime(dto));
+        goal.setTargetDistance(dto.getTargetDistance());
+        goal.setTargetTimeSeconds(targetSeconds);
+        goal.setTargetDate(dto.getTargetDate());
+        goal.setEvent(dto.getEvent());
         goal.setStatus(Status.ACTIVE);
+        goal.setCreatedAt(today);
+        goalRepository.save(goal);
 
-        Goal savedGoal = goalRepository.save(goal);
+        GoalAssessment assessment = new GoalAssessment();
+        assessment.setGoal(goal);
+        assessment.setRequiredImprovementPercentage(result.getRequiredImprovementPercentage());
+        assessment.setEstimatedWeeks(result.getEstimatedWeeks());
+        assessment.setProjectedDate(result.getProjectedDate());
+        assessment.setDifficulty(result.getDifficulty());
+        assessment.setExplanation(result.getExplanation());
+        assessment.setCreatedAt(today);
 
-        GoalAssessment assessment = createGoalAssessment(savedGoal);
+
 
         goalAssessmentRepository.save(assessment);
     }
 
     private int parseTargetTime(GoalCreationDto dto) {
-        return dto.getTargetHours() * 60 * 60 + dto.getTargetMinutes() * 60 + dto.getTargetSeconds();
-    }
+        int hours = dto.getTargetHours() != null ? dto.getTargetHours() : 0;
+        int minutes = dto.getTargetMinutes() != null ? dto.getTargetMinutes() : 0;
+        int seconds = dto.getTargetSeconds() != null ? dto.getTargetSeconds() : 0;
 
-    private GoalAssessment createGoalAssessment(Goal goal) {
-        RunnerProfile profile = goal.getRunnerProfile();
-
-        double distance = profile.getLongestRecentRun();
-        double pace = profile.getAveragePaceSeconds();
-
-        if (distance <= 0 || pace <= 0) {
-            throw new IllegalStateException(
-                    "Необходими са валидни данни за бягане, за да се направи прогноза."
-            );
-        }
-
-        double baseTimeSeconds = pace * distance;
-
-        double predictedTime =
-                baseTimeSeconds
-                        * Math.pow(goal.getTargetDistance() / distance, 1.06);
-
-        GoalAssessment assessment = new GoalAssessment();
-        assessment.setGoal(goal);
-        assessment.setPredictedTime((int) Math.round(predictedTime));
-
-        if (goal.getTargetTimeSeconds() <= 0) {
-            throw new IllegalArgumentException(
-                    "Целевото време трябва да бъде положително."
-            );
-        }
-
-        double percentage =
-                ((predictedTime - goal.getTargetTimeSeconds())
-                        / predictedTime) * 100;
-
-        assessment.setRequiredImprovementPercentage(
-                Math.max(0, percentage)
-        );
-
-        assessment.setCreatedAt(LocalDate.now());
-        assessment.setDifficulty(determineDifficulty(percentage, goal.getTargetDate()));
-
-        //TODO: Goal-а не е определен спрямо таргет датата. Да се изчисли спрямо това и трудноста
-
-        return assessment;
-    }
-
-    private Difficulty determineDifficulty(double percentage, LocalDate targetDate) {
-
-        double weeksRemaining = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), targetDate) / 7.0;
-
-        if (weeksRemaining < 0){
-            return Difficulty.UNREALISTIC;
-        }
-
-        double improvementPercentagePerWeek = percentage / weeksRemaining;
-
-        if (percentage <= 0.3){
-            return Difficulty.REALISTIC;
-        }
-
-        if (percentage <= 0.5) {
-            return Difficulty.CHALLENGING;
-        }
-
-        if (percentage <= 1.0) {
-            return Difficulty.VERY_AMBITIOUS;
-        }
-
-
-        return Difficulty.UNREALISTIC;
+        return (hours * 3600) + (minutes * 60) + seconds;
     }
 }
