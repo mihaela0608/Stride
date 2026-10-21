@@ -4,4 +4,5 @@ import org.example.stride.model.dto.GoalCreationDto;
 
 public interface GoalService {
     void createGoal(GoalCreationDto goalCreationDto);
+    boolean replaceGoal(GoalCreationDto goalCreationDto);
 }

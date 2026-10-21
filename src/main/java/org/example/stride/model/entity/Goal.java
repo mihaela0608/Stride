@@ -28,9 +28,9 @@ public class Goal extends BaseEntity{
     private LocalDate targetDate;
 
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     @Enumerated(value = EnumType.STRING)
-    private Status status = Status.ACTIVE;
+    private Status status;
 
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;

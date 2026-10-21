@@ -43,4 +43,27 @@ public class GoalController {
                         "Goal is created successfully."
                 ));
     }
+
+    @PostMapping("/replace")
+    public ResponseEntity<?> replaceGoal(@Valid @RequestBody GoalCreationDto dto){
+        Long userId = currentUserService.getCurrentUser().getId();
+
+        if (!runnerProfileService.hasProfile(userId)){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "message",
+                            "First you need to create runner profile"
+                    ));
+        }
+
+        boolean result = goalService.replaceGoal(dto);
+
+        if (!result){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Not active goal to be replaced"));
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("message", "New active goal created"));
+    }
 }
