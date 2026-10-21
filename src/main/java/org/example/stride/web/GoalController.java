@@ -6,46 +6,41 @@ import org.example.stride.model.dto.GoalCreationDto;
 import org.example.stride.service.GoalService;
 import org.example.stride.service.RunnerProfileService;
 import org.example.stride.service.session.CurrentUserService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/goals")
 @RequiredArgsConstructor
 public class GoalController {
+
     private final GoalService goalService;
     private final RunnerProfileService runnerProfileService;
     private final CurrentUserService currentUserService;
 
-    @GetMapping("/goals/add")
-    public String viewGoalSetup(Model model){
+    @PostMapping
+    public ResponseEntity<?> createGoal(
+            @Valid @RequestBody GoalCreationDto dto) {
 
-        if (!runnerProfileService.hasProfile(currentUserService.getCurrentUser().getId())){
-            return "redirect:/profile/setup";
+        Long userId = currentUserService.getCurrentUser().getId();
+
+        if (!runnerProfileService.hasProfile(userId)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "message",
+                            "First you need to create runner profile"
+                    ));
         }
 
-        model.addAttribute("goalCreationDto", new GoalCreationDto());
+        goalService.createGoal(dto);
 
-        return "goal-new";
-    }
-
-    @PostMapping("/goals/add")
-    public String createGoal(@Valid @ModelAttribute GoalCreationDto goalCreationDto, BindingResult bindingResult){
-        if (!runnerProfileService.hasProfile(currentUserService.getCurrentUser().getId())){
-            return "redirect:/profile/setup";
-        }
-
-        if (bindingResult.hasErrors()){
-            return "goal-new";
-        }
-
-        goalService.createGoal(goalCreationDto);
-
-        return "redirect:/";
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of(
+                        "message",
+                        "Goal is created successfully."
+                ));
     }
 }
-
-//TODO: Препраща към /login след изпращане на формата. Не записва в базата

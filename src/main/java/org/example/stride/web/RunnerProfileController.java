@@ -1,75 +1,63 @@
 package org.example.stride.web;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.RunnerProfileDto;
-import org.example.stride.model.enums.Day;
-import org.example.stride.model.enums.ExperienceLevel;
 import org.example.stride.service.RunnerProfileService;
 import org.example.stride.service.session.CurrentUserService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.Map;
 
-@AllArgsConstructor
-@Controller
+@RestController
+@RequestMapping("/api/runner-profile")
+@RequiredArgsConstructor
 public class RunnerProfileController {
+
     private final RunnerProfileService runnerProfileService;
     private final CurrentUserService currentUserService;
 
-    @ModelAttribute("experienceLevels")
-    public ExperienceLevel[] experienceLevels() {
-        return ExperienceLevel.values();
+    @GetMapping("/status")
+    public ResponseEntity<?> getProfileStatus() {
+        Long userId = currentUserService.getCurrentUser().getId();
+
+        boolean hasProfile = runnerProfileService.hasProfile(userId);
+
+        return ResponseEntity.ok(
+                Map.of("hasProfile", hasProfile)
+        );
     }
 
-    @ModelAttribute("days")
-    public Day[] days(){
-        return Day.values();
-    }
+    @PostMapping
+    public ResponseEntity<?> createProfile(
+            @Valid @RequestBody RunnerProfileDto dto) {
 
-    @GetMapping("/profile/setup")
-    public String viewProfileSetup(Model model, RedirectAttributes redirectAttributes){
+        Long userId = currentUserService.getCurrentUser().getId();
 
-        if (runnerProfileService.hasProfile(currentUserService.getCurrentUser().getId())){
-            redirectAttributes.addFlashAttribute("info", "Вече имаш профил. Можеш да го редактираш");
-            return "redirect:/profile";
+        if (runnerProfileService.hasProfile(userId)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "message",
+                            "You already have profile."
+                    ));
         }
 
-        model.addAttribute("runnerProfileDto", new RunnerProfileDto());
-
-        return "profile-setup";
-    }
-
-    @PostMapping("/profile/setup")
-    public String createProfile(@Valid @ModelAttribute("runnerProfileDto") RunnerProfileDto runnerProfileDto, BindingResult bindingResult){
-
-        if (runnerProfileService.hasProfile(currentUserService.getCurrentUser().getId())) {
-            return "redirect:/profile";
-        }
-
-        if (bindingResult.hasErrors()){
-            return "profile-setup";
-        }
-
-        boolean created = runnerProfileService.createRunnerProfile(runnerProfileDto);
+        boolean created = runnerProfileService.createRunnerProfile(dto);
 
         if (!created) {
-            bindingResult.reject(
-                    "profile.exists",
-                    "Вече имаш създаден профил."
-            );
-
-            return "profile-setup";
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "message",
+                            "Profile is not created. It is possible to already exist."
+                    ));
         }
 
-        return "redirect:/profile";
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of(
+                        "message",
+                        "Runner profile is created successfully."
+                ));
     }
 }
-

@@ -1,13 +1,17 @@
 package org.example.stride.web;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api")
 public class HomeController {
 
-    @GetMapping("/")
-    public String home(){
-        return "index.html";
+    @GetMapping("/health")
+    public Map<String, String> health() {
+        return Map.of("status", "UP");
     }
 }
