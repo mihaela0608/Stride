@@ -3,6 +3,7 @@ package org.example.stride.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.GoalCreationDto;
+import org.example.stride.model.dto.GoalResponseDto;
 import org.example.stride.model.entity.Goal;
 import org.example.stride.model.entity.GoalAssessment;
 import org.example.stride.model.entity.RunnerProfile;
@@ -13,10 +14,13 @@ import org.example.stride.service.GoalService;
 import org.example.stride.service.helpClasses.AssessmentResult;
 import org.example.stride.service.helpClasses.GoalAssessmentCalculator;
 import org.example.stride.service.session.CurrentUserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class GoalServiceImpl implements GoalService {
     private final GoalAssessmentRepository goalAssessmentRepository;
     private final CurrentUserService currentUserService;
     private final GoalAssessmentCalculator calculator;
+    private final ModelMapper modelMapper;
 
     @Override
     @Transactional
@@ -59,6 +64,29 @@ public class GoalServiceImpl implements GoalService {
 
         return true;
     }
+
+    @Override
+    public boolean completeActiveGoal() {
+        RunnerProfile profile =
+                currentUserService.getCurrentUser().getRunnerProfile();
+        Optional<Goal> goal = goalRepository.findByRunnerProfileAndStatus(profile, Status.ACTIVE);
+
+        if (goal.isEmpty()){
+            return false;
+        }
+        goal.get().setStatus(Status.COMPLETED);
+        goalRepository.save(goal.get());
+        return true;
+    }
+
+    @Override
+    public List<GoalResponseDto> getAll() {
+        RunnerProfile profile =
+                currentUserService.getCurrentUser().getRunnerProfile();
+        return goalRepository.findAllByRunnerProfile(profile).stream().map(this::toGoalResponseDto).toList();
+    }
+
+
 
     private RunnerProfile getCurrentRunnerProfile() {
         RunnerProfile profile =
@@ -136,5 +164,11 @@ public class GoalServiceImpl implements GoalService {
                 ? dto.getTargetSeconds() : 0;
 
         return hours * 3600 + minutes * 60 + seconds;
+    }
+
+    private GoalResponseDto toGoalResponseDto(Goal goal) {
+        GoalResponseDto dto = new GoalResponseDto();
+        modelMapper.map(goal, dto);
+        return dto;
     }
 }
