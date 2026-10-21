@@ -21,9 +21,6 @@ public class StrideUserDetailsService implements UserDetailsService {
                         new UsernameNotFoundException("User not found")
                 );
 
-        String authority = user.getRunnerProfile() == null
-                ? "USER"
-                : "RUNNER";
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
