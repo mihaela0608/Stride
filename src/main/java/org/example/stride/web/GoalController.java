@@ -1,15 +1,11 @@
+
 package org.example.stride.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.json.JSONParser;
 import org.example.stride.model.dto.GoalCreationDto;
 import org.example.stride.model.dto.GoalResponseDto;
-import org.example.stride.model.entity.Goal;
 import org.example.stride.service.GoalService;
-import org.example.stride.service.RunnerProfileService;
-import org.example.stride.service.session.CurrentUserService;
-import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +19,10 @@ import java.util.Map;
 public class GoalController {
 
     private final GoalService goalService;
-    private final RunnerProfileService runnerProfileService;
-    private final CurrentUserService currentUserService;
 
     @PostMapping
-    public ResponseEntity<?> createGoal(
+    public ResponseEntity<Map<String, String>> createGoal(
             @Valid @RequestBody GoalCreationDto dto) {
-
-        ResponseEntity<Map<String, String>> CONFLICT = getMapResponseEntity();
-        if (CONFLICT != null) return CONFLICT;
 
         goalService.createGoal(dto);
 
@@ -42,60 +33,36 @@ public class GoalController {
                 ));
     }
 
-
-
     @PostMapping("/replace")
-    public ResponseEntity<?> replaceGoal(@Valid @RequestBody GoalCreationDto dto){
-        ResponseEntity<Map<String, String>> CONFLICT = getMapResponseEntity();
-        if (CONFLICT != null) return CONFLICT;
+    public ResponseEntity<Map<String, String>> replaceGoal(
+            @Valid @RequestBody GoalCreationDto dto) {
 
-        boolean result = goalService.replaceGoal(dto);
-
-        if (!result){
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", "Not active goal to be replaced"));
-        }
+        goalService.replaceGoal(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message", "New active goal created"));
+                .body(Map.of(
+                        "message",
+                        "New active goal created."
+                ));
     }
 
     @PatchMapping("/active/complete")
-    public ResponseEntity<?> completeGoal(){
-        ResponseEntity<Map<String, String>> CONFLICT = getMapResponseEntity();
-        if (CONFLICT != null) return CONFLICT;
+    public ResponseEntity<Map<String, String>> completeGoal() {
 
-        boolean result = goalService.completeActiveGoal();
+        boolean completed = goalService.completeActiveGoal();
 
-        if (result){
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(Map.of("message", "Goal is completed."));
+        if (!completed) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "No active goal."));
         }
 
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("message", "No active goal."));
+        return ResponseEntity.ok(
+                Map.of("message", "Goal is completed.")
+        );
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(){
-        ResponseEntity<Map<String, String>> CONFLICT = getMapResponseEntity();
-        if (CONFLICT != null) return CONFLICT;
-
-        List<GoalResponseDto> goals = goalService.getAll();
-
-        return ResponseEntity.ok(goals);
-    }
-
-    private @Nullable ResponseEntity<Map<String, String>> getMapResponseEntity() {
-        Long userId = currentUserService.getCurrentUser().getId();
-
-        if (!runnerProfileService.hasProfile(userId)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of(
-                            "message",
-                            "First you need to create runner profile"
-                    ));
-        }
-        return null;
+    public ResponseEntity<List<GoalResponseDto>> getAll() {
+        return ResponseEntity.ok(goalService.getAll());
     }
 }

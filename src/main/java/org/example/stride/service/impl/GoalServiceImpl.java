@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class GoalServiceImpl implements GoalService {
         if (goalRepository.existsByRunnerProfileAndStatus(
                 profile, Status.ACTIVE)) {
             throw new IllegalStateException(
-                    "Вече имаш активна цел. Замени я, преди да създадеш нова."
+                    "You already have active goal. Replace it with a new one."
             );
         }
 
@@ -52,10 +51,10 @@ public class GoalServiceImpl implements GoalService {
     public boolean replaceGoal(GoalCreationDto dto) {
         RunnerProfile profile = getCurrentRunnerProfile();
 
-        Goal activeGoal = (Goal) goalRepository
-                .findAllByRunnerProfileAndStatus(profile, Status.ACTIVE)
+        Goal activeGoal = goalRepository
+                .findByRunnerProfileAndStatus(profile, Status.ACTIVE)
                 .orElseThrow(() -> new IllegalStateException(
-                        "Нямаш активна цел, която да замениш."
+                        "You don't have active goal to replace."
                 ));
 
         activeGoal.setStatus(Status.REPLACED);
@@ -66,27 +65,29 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
+    @Transactional
     public boolean completeActiveGoal() {
-        RunnerProfile profile =
-                currentUserService.getCurrentUser().getRunnerProfile();
-        Optional<Goal> goal = goalRepository.findByRunnerProfileAndStatus(profile, Status.ACTIVE);
+        RunnerProfile profile = getCurrentRunnerProfile();
 
-        if (goal.isEmpty()){
-            return false;
-        }
-        goal.get().setStatus(Status.COMPLETED);
-        goalRepository.save(goal.get());
-        return true;
+        return goalRepository
+                .findByRunnerProfileAndStatus(profile, Status.ACTIVE)
+                .map(goal -> {
+                    goal.setStatus(Status.COMPLETED);
+                    return true;
+                })
+                .orElse(false);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GoalResponseDto> getAll() {
-        RunnerProfile profile =
-                currentUserService.getCurrentUser().getRunnerProfile();
-        return goalRepository.findAllByRunnerProfile(profile).stream().map(this::toGoalResponseDto).toList();
+        RunnerProfile profile = getCurrentRunnerProfile();
+
+        return goalRepository.findAllByRunnerProfile(profile)
+                .stream()
+                .map(this::toGoalResponseDto)
+                .toList();
     }
-
-
 
     private RunnerProfile getCurrentRunnerProfile() {
         RunnerProfile profile =
@@ -94,7 +95,7 @@ public class GoalServiceImpl implements GoalService {
 
         if (profile == null) {
             throw new IllegalStateException(
-                    "Преди да създадеш цел, трябва да имаш бегачески профил."
+                    "You need to have runner profile to work with goals."
             );
         }
 
@@ -109,14 +110,14 @@ public class GoalServiceImpl implements GoalService {
 
         if (targetSeconds <= 0) {
             throw new IllegalArgumentException(
-                    "Целевото време трябва да бъде положително."
+                    "Target time should be positive."
             );
         }
 
         if (profile.getLongestRecentRun() <= 0
                 || profile.getAveragePaceSeconds() <= 0) {
             throw new IllegalStateException(
-                    "Необходими са валидни данни за бягане, за да се направи прогноза."
+                    "Run data should be valid to make a assessment."
             );
         }
 
@@ -133,10 +134,7 @@ public class GoalServiceImpl implements GoalService {
 
         Goal goal = new Goal();
         goal.setRunnerProfile(profile);
-        goal.setTargetDistance(dto.getTargetDistance());
-        goal.setTargetTimeSeconds(targetSeconds);
-        goal.setTargetDate(dto.getTargetDate());
-        goal.setEvent(dto.getEvent());
+        modelMapper.map(dto, goal);
         goal.setCreatedAt(today);
         goal.setStatus(Status.ACTIVE);
 
@@ -155,6 +153,19 @@ public class GoalServiceImpl implements GoalService {
         goalAssessmentRepository.save(assessment);
     }
 
+    private GoalResponseDto toGoalResponseDto(Goal goal) {
+        GoalResponseDto dto = new GoalResponseDto();
+
+        modelMapper.map(goal, dto);
+        dto.setStatus(
+                goal.getStatus() != null
+                        ? goal.getStatus()
+                        : null
+        );
+
+        return dto;
+    }
+
     private int parseTargetTime(GoalCreationDto dto) {
         int hours = dto.getTargetHours() != null
                 ? dto.getTargetHours() : 0;
@@ -164,11 +175,5 @@ public class GoalServiceImpl implements GoalService {
                 ? dto.getTargetSeconds() : 0;
 
         return hours * 3600 + minutes * 60 + seconds;
-    }
-
-    private GoalResponseDto toGoalResponseDto(Goal goal) {
-        GoalResponseDto dto = new GoalResponseDto();
-        modelMapper.map(goal, dto);
-        return dto;
     }
 }
