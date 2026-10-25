@@ -24,8 +24,10 @@ public class TrainingWeek extends BaseEntity{
     private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
-    private LocalDate end_date;
+    private LocalDate endDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Focus focus;
 
 }

@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 public class Workout extends BaseEntity{
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "training_week_id")
     private TrainingWeek trainingWeek;
 
@@ -23,13 +23,14 @@ public class Workout extends BaseEntity{
     private LocalDate date;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     @Column(nullable = false)
     private double distance;
 
-    @Column(nullable = false)
-    private Duration duration;
+    @Column(nullable = false, name = "duration_seconds")
+    private int durationSeconds;
 
     @Column(nullable = false)
     private String description;
@@ -38,5 +39,6 @@ public class Workout extends BaseEntity{
     private int intensity;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
 }

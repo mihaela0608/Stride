@@ -27,5 +27,6 @@ public class TrainingPlan extends BaseEntity{
     private int weeks;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
 }
