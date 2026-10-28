@@ -3,7 +3,7 @@ package org.example.stride.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.stride.model.enums.RunType;
+import org.example.stride.model.enums.Type;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -21,6 +21,10 @@ public class Run extends BaseEntity{
     @Column(nullable = false)
     private LocalDate date;
 
+    @ManyToOne
+    @JoinColumn(name = "workout_id")
+    private Workout workout;
+
     @Column(nullable = false)
     private double distance;
 
@@ -37,7 +41,7 @@ public class Run extends BaseEntity{
     private int elevationGain;
 
     @Column(name = "run_type", nullable = false)
-    private RunType runType;
+    private Type runType;
 
     @Column(name = "perceivedEffort", nullable = false)
     private int perceivedEffort;

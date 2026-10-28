@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.example.stride.model.enums.Focus;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "training_weeks")
@@ -19,6 +20,12 @@ public class TrainingWeek extends BaseEntity{
 
     @Column(name = "week_number", nullable = false)
     private int weekNumber;
+
+    @Column(name = "target_weekly_distance")
+    private double targetWeeklyDistance;
+
+    @OneToMany
+    private List<Workout> workouts;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
