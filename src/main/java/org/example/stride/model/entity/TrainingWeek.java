@@ -24,8 +24,6 @@ public class TrainingWeek extends BaseEntity{
     @Column(name = "target_weekly_distance")
     private double targetWeeklyDistance;
 
-    @OneToMany
-    private List<Workout> workouts;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
