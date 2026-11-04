@@ -3,6 +3,7 @@ package org.example.stride.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.RunCreationDto;
+import org.example.stride.model.dto.RunResponseDto;
 import org.example.stride.model.entity.Run;
 import org.example.stride.model.entity.RunnerProfile;
 import org.example.stride.model.entity.Workout;
@@ -13,7 +14,10 @@ import org.example.stride.service.session.CurrentUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +52,18 @@ public class RunServiceImpl implements RunService {
         runRepository.save(run);
     }
 
+    @Override
+    public List<RunResponseDto> getAll() {
+        List<RunResponseDto> dtos = new ArrayList<>();
+        dtos = runRepository.findAllByRunnerProfile(getRunnerProfile()).stream().map(e -> {
+            RunResponseDto dto = new RunResponseDto();
+            modelMapper.map(e, dto);
+            return dto;
+        }).toList();
+        return dtos;
+    }
+
+
     private RunnerProfile getRunnerProfile() {
         RunnerProfile profile =
                 currentUserService.getCurrentUser().getRunnerProfile();
@@ -60,4 +76,6 @@ public class RunServiceImpl implements RunService {
 
         return profile;
     }
+
+
 }

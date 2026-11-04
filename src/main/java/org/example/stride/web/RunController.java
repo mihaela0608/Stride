@@ -3,18 +3,17 @@ package org.example.stride.web;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.RunCreationDto;
+import org.example.stride.model.dto.RunResponseDto;
 import org.example.stride.service.RunService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/runs")
+@RequestMapping("/api/runs")
 @RequiredArgsConstructor
 public class RunController {
     private final RunService runService;
@@ -25,5 +24,10 @@ public class RunController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message", "Run is created successfully!"));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RunResponseDto>> getAll(){
+        return ResponseEntity.ok(runService.getAll());
     }
 }

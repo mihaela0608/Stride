@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface RunRepository extends JpaRepository<Run, Long> {
     List<Run> findAllByRunnerProfileAndDateAfter(RunnerProfile profile, LocalDate startDate);
+    List<Run> findAllByRunnerProfile(RunnerProfile profile);
 }
