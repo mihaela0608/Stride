@@ -2,6 +2,7 @@ package org.example.stride.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.stride.model.dto.TrainingPlanViewDto;
 import org.example.stride.model.entity.Goal;
 import org.example.stride.model.entity.GoalAssessment;
 import org.example.stride.model.entity.RunnerProfile;
@@ -12,9 +13,12 @@ import org.example.stride.repository.TrainingPlanRepository;
 import org.example.stride.service.AdaptivePlanService;
 import org.example.stride.service.TrainingPlanService;
 import org.example.stride.service.session.CurrentUserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
     private final AdaptivePlanService adaptivePlanService;
     private final CurrentUserService currentUserService;
     private final GoalRepository goalRepository;
+    private final ModelMapper modelMapper;
 
 
     @Override
@@ -47,7 +52,7 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
     @Override
     @Transactional
     public void generateNewWeeks() {
-        RunnerProfile profile = currentUserService.getCurrentUser().getRunnerProfile();
+        RunnerProfile profile = getRunnerProfile();
         if (profile == null) {
             throw new IllegalStateException("Create a runner profile first.");
         }
@@ -61,7 +66,28 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
         adaptivePlanService.generateOrUpdateNextWindow(plan);
     }
 
+    @Override
+    public TrainingPlanViewDto getCurrentTrainingPlan() {
+        RunnerProfile runnerProfile = getRunnerProfile();
+        Optional<Goal> optionalGoal = goalRepository.findByRunnerProfileAndStatus(runnerProfile, Status.ACTIVE);
 
+        if (optionalGoal.isEmpty()){
+            throw new IllegalStateException("You need to have goal to have a training plan!");
+        }
+
+        TrainingPlan trainingPlan = trainingPlanRepository.findByGoal(optionalGoal.get()).get();
+        TrainingPlanViewDto dto = new TrainingPlanViewDto();
+        modelMapper.map(trainingPlan, dto);
+        return dto;
+    }
+
+    private RunnerProfile getRunnerProfile() {
+        RunnerProfile runnerProfile = currentUserService.getCurrentUser().getRunnerProfile();
+        if (runnerProfile == null){
+            throw new IllegalStateException("You need runner profile to work with training plans!");
+        }
+        return runnerProfile;
+    }
 
 
 }
