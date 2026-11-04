@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 public class Run extends BaseEntity{
 
-    @OneToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "runner_profile_id", nullable = false)
     private RunnerProfile runnerProfile;
 
@@ -29,21 +29,22 @@ public class Run extends BaseEntity{
     private double distance;
 
     @Column(nullable = false)
-    private Duration time;
+    private int duration;
 
-    @Column(name = "average_peace", nullable = false)
-    private Duration averagePeace;
+    @Column(name = "average_pace", nullable = false)
+    private double averagePace;
 
-    @Column(name = "averageHeartRate")
-    private int averageHeartRate;
+    @Column(name = "average_heart_rate")
+    private Integer averageHeartRate;
 
     @Column(name = "elevation_gain")
-    private int elevationGain;
+    private Integer elevationGain;
 
     @Column(name = "run_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type runType;
 
-    @Column(name = "perceivedEffort", nullable = false)
+    @Column(name = "perceived_effort", nullable = false)
     private int perceivedEffort;
 
     private String notes;
