@@ -1,6 +1,7 @@
 package org.example.stride.repository;
 
 import org.example.stride.model.entity.Goal;
+import org.example.stride.model.entity.RunnerProfile;
 import org.example.stride.model.entity.TrainingPlan;
 import org.example.stride.model.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;

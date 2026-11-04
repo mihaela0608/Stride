@@ -11,6 +11,7 @@ import org.example.stride.model.enums.Status;
 import org.example.stride.repository.GoalAssessmentRepository;
 import org.example.stride.repository.GoalRepository;
 import org.example.stride.service.GoalService;
+import org.example.stride.service.TrainingPlanService;
 import org.example.stride.service.helpClasses.AssessmentResult;
 import org.example.stride.service.helpClasses.GoalAssessmentCalculator;
 import org.example.stride.service.session.CurrentUserService;
@@ -28,6 +29,7 @@ public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
     private final GoalAssessmentRepository goalAssessmentRepository;
     private final CurrentUserService currentUserService;
+    private final TrainingPlanService trainingPlanService;
     private final GoalAssessmentCalculator calculator;
     private final ModelMapper modelMapper;
 
@@ -151,6 +153,7 @@ public class GoalServiceImpl implements GoalService {
         assessment.setCreatedAt(today);
 
         goalAssessmentRepository.save(assessment);
+        trainingPlanService.createTrainingPlan(goal, assessment);
     }
 
     private GoalResponseDto toGoalResponseDto(Goal goal) {
