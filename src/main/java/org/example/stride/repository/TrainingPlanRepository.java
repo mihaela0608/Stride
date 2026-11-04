@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface TrainingPlanRepository extends JpaRepository<TrainingPlan, Long> {
-    Optional<TrainingPlan> findByGoalAndStatus(Goal goal, Status status);
+    Optional<TrainingPlan> findByGoal(Goal goal);
 }
 

@@ -85,8 +85,35 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
     @Override
     @Transactional
     public void generateOrUpdateNextWindow(TrainingPlan plan) {
+        RunnerProfile profile = validateAndGetProfile(plan);
+
+        LocalDate today = LocalDate.now();
+        int currentWeekNumber = determineCurrentWeek(plan, today);
+        double fatigueFactor = calculateFatigueFactor(profile, today);
+
+        for (int offset = 0; offset < WINDOW_WEEKS; offset++) {
+            int weekNumber = currentWeekNumber + offset;
+
+            if (weekNumber > plan.getWeeks()) {
+                break;
+            }
+
+            TrainingWeek week = trainingWeekRepository
+                    .findByTrainingPlanAndWeekNumber(plan, weekNumber)
+                    .orElseGet(() -> createWeek(plan, weekNumber));
+
+            week.setFocus(determineFocus(plan.getGoal(), weekNumber, week.getStartDate()));
+            week.setTargetWeeklyDistance(calculateTargetVolume(plan, profile, week, fatigueFactor));
+            week = trainingWeekRepository.save(week);
+
+            workoutRepository.deleteAllByTrainingWeekAndStatusAndDateGreaterThanEqual(week, Status.ACTIVE, today);
+            workoutRepository.saveAll(buildWorkouts(week, profile, week.getTargetWeeklyDistance(), today));
+        }
+    }
+
+    private RunnerProfile validateAndGetProfile(TrainingPlan plan) {
         if (plan == null || plan.getGoal() == null) {
-            throw new IllegalArgumentException("Training plan and goal are non-negotiable");
+            throw new IllegalArgumentException("Training plan and goal are required.");
         }
 
         RunnerProfile profile = currentUserService.getCurrentUser().getRunnerProfile();
@@ -111,38 +138,17 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
             throw new IllegalStateException("Select at least one preferred running day.");
         }
 
-        LocalDate today = LocalDate.now();
-        int currentWeekNumber = determineCurrentWeek(plan, today);
-        double fatigueFactor = calculateFatigueFactor(profile, today);
-
-        for (int offset = 0; offset < WINDOW_WEEKS; offset++) {
-            int weekNumber = currentWeekNumber + offset;
-
-            if (weekNumber > plan.getWeeks()) {
-                break;
-            }
-
-            if (trainingWeekRepository.findByTrainingPlanAndWeekNumber(plan, weekNumber).isPresent()) {
-                continue;
-            }
-
-            TrainingWeek week = trainingWeekRepository.save(createWeek(plan, weekNumber));
-            double volume = calculateTargetVolume(plan, profile, week, fatigueFactor);
-
-            workoutRepository.saveAll(buildWorkouts(week, profile, volume, today));
-        }
+        return profile;
     }
 
     private TrainingWeek createWeek(TrainingPlan plan, int weekNumber) {
         LocalDate startDate = firstWeekStart(plan).plusWeeks(weekNumber - 1L);
-        LocalDate endDate = startDate.plusDays(6);
 
         TrainingWeek week = new TrainingWeek();
         week.setTrainingPlan(plan);
         week.setWeekNumber(weekNumber);
         week.setStartDate(startDate);
-        week.setEndDate(endDate);
-        week.setFocus(determineFocus(plan.getGoal(), weekNumber, startDate));
+        week.setEndDate(startDate.plusDays(6));
 
         return week;
     }
@@ -253,28 +259,18 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
                     trainingWeekRepository.findByTrainingPlanAndWeekNumber(plan, number);
 
             if (previous.isEmpty()) {
-                return OptionalDouble.empty();
+                continue;
             }
 
             Focus focus = previous.get().getFocus();
+            double volume = previous.get().getTargetWeeklyDistance();
 
-            if (focus == Focus.BASE || focus == Focus.BUILD) {
-                double volume = weeklyVolume(previous.get());
-
-                if (volume > 0) {
-                    return OptionalDouble.of(volume);
-                }
+            if ((focus == Focus.BASE || focus == Focus.BUILD) && volume > 0) {
+                return OptionalDouble.of(volume);
             }
         }
 
         return OptionalDouble.empty();
-    }
-
-    private double weeklyVolume(TrainingWeek week) {
-        return workoutRepository.findAllByTrainingWeekOrderByDateAsc(week).stream()
-                .filter(workout -> workout.getType() != Type.RACE)
-                .mapToDouble(Workout::getDistance)
-                .sum();
     }
 
     private List<Workout> buildWorkouts(
@@ -396,7 +392,7 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
         double qualityDistance = session == null ? 0 : session.distanceKm();
         int easyRuns = runs - 1 - (withQuality ? 1 : 0);
         double easyDistance = easyRuns > 0
-                ? Math.max(MIN_RUN_KM, roundToOneDecimal((volume - longDistance - qualityDistance) / easyRuns))
+                ? calculateEasyDistance(volume, longDistance, qualityDistance, easyRuns)
                 : 0;
 
         List<Workout> workouts = new ArrayList<>();
@@ -457,6 +453,12 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
         }
 
         return workouts;
+    }
+
+    private double calculateEasyDistance(double volume, double longDistance, double qualityDistance, int easyRuns) {
+        double share = roundToOneDecimal((volume - longDistance - qualityDistance) / easyRuns);
+        double capped = Math.min(share, longDistance);
+        return Math.max(MIN_RUN_KM, capped);
     }
 
     private boolean isQualityAllowed(
@@ -552,7 +554,7 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
                 "Tempo run: around %.1f km at %s/km pace (comfortably hard effort). Remaining %.1f km is warm-up and cool-down.",
                 session.hardKm(),
                 formatPace(session.hardPace()),
-                session.distanceKm()
+                session.distanceKm() - session.hardKm()
         );
     }
 
@@ -583,7 +585,7 @@ public class AdaptivePlanServiceImpl implements AdaptivePlanService {
     }
 
     private LocalDate firstWeekStart(TrainingPlan plan) {
-        return plan.getStartDate().with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+        return plan.getStartDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
     }
 
     private int determineCurrentWeek(TrainingPlan plan, LocalDate today) {

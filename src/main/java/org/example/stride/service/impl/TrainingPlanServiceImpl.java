@@ -1,5 +1,6 @@
 package org.example.stride.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.entity.Goal;
 import org.example.stride.model.entity.GoalAssessment;
@@ -26,6 +27,7 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
 
 
     @Override
+    @Transactional
     public void createTrainingPlan(Goal goal, GoalAssessment assessment) {
         if (goal.getTargetDate().isBefore(LocalDate.now().plusWeeks(assessment.getEstimatedWeeks()))){
             throw new IllegalStateException("Current goal is not compatible with your predictions.");
@@ -43,13 +45,20 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
     }
 
     @Override
+    @Transactional
     public void generateNewWeeks() {
-        RunnerProfile runnerProfile = currentUserService.getCurrentUser().getRunnerProfile();
-        if (!goalRepository.existsByRunnerProfileAndStatus(runnerProfile, Status.ACTIVE)){
-            throw new IllegalStateException("You need to have runner profile with active goal");
+        RunnerProfile profile = currentUserService.getCurrentUser().getRunnerProfile();
+        if (profile == null) {
+            throw new IllegalStateException("Create a runner profile first.");
         }
 
-        adaptivePlanService.generateOrUpdateNextWindow(trainingPlanRepository.findByRunnerProfile(runnerProfile).get());
+        Goal goal = goalRepository.findByRunnerProfileAndStatus(profile, Status.ACTIVE)
+                .orElseThrow(() -> new IllegalStateException("You need an active goal."));
+
+        TrainingPlan plan = trainingPlanRepository.findByGoal(goal)
+                .orElseThrow(() -> new IllegalStateException("No training plan for the active goal."));
+
+        adaptivePlanService.generateOrUpdateNextWindow(plan);
     }
 
 

@@ -139,6 +139,7 @@ public class GoalServiceImpl implements GoalService {
         modelMapper.map(dto, goal);
         goal.setCreatedAt(today);
         goal.setStatus(Status.ACTIVE);
+        goal.setTargetTimeSeconds(parseTargetTime(dto));
 
         Goal savedGoal = goalRepository.save(goal);
 
