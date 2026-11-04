@@ -11,4 +11,5 @@ public interface RunService {
     void addRun(RunCreationDto dto);
     List<RunResponseDto> getAll();
     void updateRun(Long id, RunUpdateDto dto);
+    void deleteRun(Long id);
 }

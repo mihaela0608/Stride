@@ -38,4 +38,11 @@ public class RunController {
         return ResponseEntity.ok()
                 .body(Map.of("message", "Run is updated!"));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> deleteRun(@PathVariable(name = "id") Long runId){
+        runService.deleteRun(runId);
+        return ResponseEntity.ok()
+                .body(Map.of("message", "Run deleted successfuly!"));
+    }
 }

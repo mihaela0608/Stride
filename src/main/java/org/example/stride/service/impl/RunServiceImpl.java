@@ -89,6 +89,17 @@ public class RunServiceImpl implements RunService {
         runRepository.save(run);
     }
 
+    @Override
+    public void deleteRun(Long id) {
+        RunnerProfile runnerProfile = getRunnerProfile();
+        Optional<Run> optionalRun = runRepository.findByIdAndRunnerProfile(id, runnerProfile);
+        if (optionalRun.isEmpty()){
+            throw new IllegalArgumentException("You can't delete other users runs");
+        }
+
+        runRepository.delete(optionalRun.get());
+    }
+
 
     private RunnerProfile getRunnerProfile() {
         RunnerProfile profile =
