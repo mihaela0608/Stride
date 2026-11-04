@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.RunCreationDto;
 import org.example.stride.model.dto.RunResponseDto;
+import org.example.stride.model.dto.RunUpdateDto;
 import org.example.stride.service.RunService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,12 @@ public class RunController {
     @GetMapping
     public ResponseEntity<List<RunResponseDto>> getAll(){
         return ResponseEntity.ok(runService.getAll());
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<Map<String, String>> updateRun(@PathVariable(name = "id") Long runId, @Valid @RequestBody RunUpdateDto dto){
+        runService.updateRun(runId, dto);
+        return ResponseEntity.ok()
+                .body(Map.of("message", "Run is updated!"));
     }
 }

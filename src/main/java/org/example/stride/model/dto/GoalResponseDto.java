@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class GoalResponseDto {
+     private long id;
 
      private double targetDistance;
 

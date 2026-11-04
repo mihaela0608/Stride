@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.RunCreationDto;
 import org.example.stride.model.dto.RunResponseDto;
+import org.example.stride.model.dto.RunUpdateDto;
 import org.example.stride.model.entity.Run;
 import org.example.stride.model.entity.RunnerProfile;
 import org.example.stride.model.entity.Workout;
@@ -61,6 +62,31 @@ public class RunServiceImpl implements RunService {
             return dto;
         }).toList();
         return dtos;
+    }
+
+    @Override
+    public void updateRun(Long id, RunUpdateDto dto) {
+        RunnerProfile runnerProfile = getRunnerProfile();
+        Optional<Run> optionalRun = runRepository.findByIdAndRunnerProfile(id, runnerProfile);
+        if (optionalRun.isEmpty()){
+            throw new IllegalArgumentException("You can't change other users runs");
+        }
+        Run run = optionalRun.get();
+        modelMapper.map(dto, run);
+
+        if (dto.getWorkoutId() != null) {
+            Optional<Workout> workout = workoutRepository.findById(dto.getWorkoutId());
+            if (workout.isEmpty()) {
+                throw new IllegalArgumentException("No such workout!");
+            }
+
+            if (workout.get().getTrainingWeek().getTrainingPlan().getGoal().getRunnerProfile().getId() != runnerProfile.getId()) {
+                throw new IllegalArgumentException("Workout id is not valid!");
+            }
+            run.setWorkout(workout.get());
+        }
+
+        runRepository.save(run);
     }
 
 
