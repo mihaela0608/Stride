@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout, Long> {
     void deleteAllByTrainingWeekAndStatusAndDateGreaterThanEqual(TrainingWeek week, Status status, LocalDate date);
-
+    List<Workout> findAllByTrainingWeek(TrainingWeek trainingWeek);
 }

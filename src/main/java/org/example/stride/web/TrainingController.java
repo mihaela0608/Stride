@@ -2,6 +2,10 @@ package org.example.stride.web;
 
 import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.TrainingPlanViewDto;
+import org.example.stride.model.dto.TrainingWeekViewDto;
+import org.example.stride.model.dto.WorkoutsViewDto;
+import org.example.stride.model.entity.TrainingWeek;
+import org.example.stride.model.entity.Workout;
 import org.example.stride.service.TrainingPlanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/training")
@@ -22,5 +26,15 @@ public class TrainingController {
         return ResponseEntity.ok(trainingPlanService.getCurrentTrainingPlan());
         //TODO: Training plan for active goal only
         //TODO: Returns goal id(can be problem)
+    }
+
+    @GetMapping("/workouts")
+    public ResponseEntity<List<WorkoutsViewDto>> viewAllWorkouts(){
+        return ResponseEntity.ok(trainingPlanService.getAllWorkouts());
+    }
+
+    @GetMapping("/training-weeks")
+    public ResponseEntity<List<TrainingWeekViewDto>> viewTrainingWeeks(){
+        return ResponseEntity.ok(trainingPlanService.getAllTrainingWeeks());
     }
 }
