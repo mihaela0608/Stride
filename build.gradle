@@ -27,6 +27,7 @@ dependencies {
     implementation("org.modelmapper:modelmapper:3.2.6")
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-jackson'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
