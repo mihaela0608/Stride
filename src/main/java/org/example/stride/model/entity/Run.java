@@ -1,7 +1,9 @@
 package org.example.stride.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.stride.model.enums.Type;
 
@@ -12,6 +14,8 @@ import java.time.LocalDate;
 @Table(name = "runs")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Run extends BaseEntity{
 
     @ManyToOne(optional = false)

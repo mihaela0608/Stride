@@ -73,6 +73,7 @@ public class RunServiceImpl implements RunService {
         }
         Run run = optionalRun.get();
         modelMapper.map(dto, run);
+        run.setAveragePace(dto.getDuration() / dto.getDistance());
 
         if (dto.getWorkoutId() != null) {
             Optional<Workout> workout = workoutRepository.findById(dto.getWorkoutId());
