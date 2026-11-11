@@ -123,6 +123,27 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
                 }).toList();
     }
 
+    @Override
+    public List<WorkoutsViewDto> getWeeklyWorkouts(int number) {
+        RunnerProfile runnerProfile = getRunnerProfile();
+        Optional<Goal> optionalGoal = goalRepository.findByRunnerProfileAndStatus(runnerProfile, Status.ACTIVE);
+        if (optionalGoal.isEmpty()){
+            throw new IllegalStateException("You need to have goal to have training weeks!");
+        }
+
+        Optional<TrainingWeek> week = trainingWeekRepository.findByTrainingPlanAndWeekNumber(trainingPlanRepository.findByGoal(optionalGoal.get()).get(), number);
+
+        if (week.isEmpty()){
+            throw new IllegalStateException("Invalid week!");
+        }
+
+        return workoutRepository.findAllByTrainingWeek(week.get()).stream().map(w -> {
+            WorkoutsViewDto dto = new WorkoutsViewDto();
+            modelMapper.map(w, dto);
+            return dto;
+        }).toList();
+    }
+
     private RunnerProfile getRunnerProfile() {
         RunnerProfile runnerProfile = currentUserService.getCurrentUser().getRunnerProfile();
         if (runnerProfile == null){

@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.stride.model.dto.TrainingPlanViewDto;
 import org.example.stride.model.dto.TrainingWeekViewDto;
 import org.example.stride.model.dto.WorkoutsViewDto;
-import org.example.stride.model.entity.TrainingWeek;
-import org.example.stride.model.entity.Workout;
 import org.example.stride.service.TrainingPlanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +35,10 @@ public class TrainingController {
     @GetMapping("/training-weeks")
     public ResponseEntity<List<TrainingWeekViewDto>> viewTrainingWeeks(){
         return ResponseEntity.ok(trainingPlanService.getAllTrainingWeeks());
+    }
+
+    @GetMapping("/week-workouts/{number}")
+    public ResponseEntity<List<WorkoutsViewDto>> viewWeeklyWorkouts(@PathVariable (name = "number") int number){
+        return ResponseEntity.ok(trainingPlanService.getWeeklyWorkouts(number));
     }
 }

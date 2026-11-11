@@ -5,7 +5,6 @@ import org.example.stride.model.dto.TrainingWeekViewDto;
 import org.example.stride.model.dto.WorkoutsViewDto;
 import org.example.stride.model.entity.Goal;
 import org.example.stride.model.entity.GoalAssessment;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -20,4 +19,6 @@ public interface TrainingPlanService {
     List<WorkoutsViewDto> getAllWorkouts();
 
     List<TrainingWeekViewDto> getAllTrainingWeeks();
+
+    List<WorkoutsViewDto> getWeeklyWorkouts(int number);
 }
