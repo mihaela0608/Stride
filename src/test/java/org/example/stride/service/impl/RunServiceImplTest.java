@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +30,7 @@ public class RunServiceImplTest {
 
     @Mock
     private RunRepository runRepository;
-    private ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper;
     @Mock
     private CurrentUserService currentUserService;
     @Mock
