@@ -38,8 +38,12 @@ public class TrainingPlanServiceImpl implements TrainingPlanService {
     @Override
     @Transactional
     public void createTrainingPlan(Goal goal, GoalAssessment assessment) {
-        if (goal.getTargetDate().isBefore(LocalDate.now().plusWeeks(assessment.getEstimatedWeeks()))){
-            throw new IllegalStateException("Current goal is not compatible with your predictions.");
+        if (goal.getTargetDate() != null
+                && goal.getTargetDate().isBefore(
+                LocalDate.now().plusWeeks(assessment.getEstimatedWeeks()))) {
+            throw new IllegalStateException(
+                    "Current goal is not compatible with your predictions."
+            );
         }
 
         TrainingPlan trainingPlan = new TrainingPlan();
